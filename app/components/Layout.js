@@ -2,11 +2,11 @@ import React from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
-const Layout = ({ children }) => {
+const Layout = ({ title, children }) => {
   return (
     <>
       <Head>
-        <title>Minimal NextJS App</title>
+        <title>{title}</title>
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -24,6 +24,10 @@ const Layout = ({ children }) => {
       </div>
     </>
   );
+};
+
+Layout.defaultProps = {
+  title: 'Airline Game'
 };
 
 export default Layout;
