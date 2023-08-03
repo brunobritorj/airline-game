@@ -17,12 +17,22 @@ export default function LayoutLogin() {
 
       <div className="text-center">
         <form className="form-signin">
-          <img className="mb-4" src="http://localhost:3000/images/favicon.svg" alt="" width="100" height="100" />
+          <img className="mb-4" src="/images/favicon.svg" alt="" width="100" height="100" />
           <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-          <button onClick={() => signIn('azure-ad')}>Sign in</button>
+          <nav>
+            {!session ? (
+              <button onClick={() => signIn('azure-ad')}>Sign in</button>
+            ) : (
+              <div>
+                <p>Welcome, {session.user.email}!</p>
+                <button onClick={() => signOut()}>Sign out</button>
+              </div>
+            )}
+          </nav>
           <p className="mt-5 mb-3 text-muted">2023 @ Airline Game</p>
         </form>
       </div>
     </>
   );
 }
+
