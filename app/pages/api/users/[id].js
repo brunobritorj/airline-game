@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 
 // GET /api/user/{id}
-export default async function getUserHandler(req, res) {
+export async function getUserHandler(req, res) {
   try {
     
     await connectToDatabase();
@@ -32,7 +32,7 @@ export default async function getUserHandler(req, res) {
 }
 
 // POST /api/user/{id}
-export default async function createUserHandler(req, res) {
+export async function createUserHandler(req, res) {
   try {
     if (req.method === 'POST') {
       const userData = req.body; // Assuming you're sending the user data in the request body
