@@ -1,21 +1,26 @@
 import { useSession } from 'next-auth/react';
 import Layout from '../components/Layout';
 
+const navbarSubItems = [
+  { name: 'All', url: '/aircrafts' },
+  { name: 'Mine', url: '/aircrafts?mine' },
+  { name: 'Market', url: '/aircrafts?market' },
+]
+
 export default function Protected() {
   const { data: session } = useSession();
 
   if (!session) {
     return (
-      <Layout title="Airline Game | Protected">
+      <Layout>
         <p>You need to sign in to access this page.</p>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Airline Game | Protected">
-      <h1>Protected Page</h1>
-      <p>Welcome, {session.user.email}!</p>
+    <Layout subtitle="Airports" icon="/images/airport-icon.svg" navbarSubItems={navbarSubItems}>
+      <p>Welcome, {session.user.name}!</p>
     </Layout>
   );
 }

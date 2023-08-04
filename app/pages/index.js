@@ -8,7 +8,6 @@ export default function Home() {
   if (!session) {
     return <LayoutUnauthenticated />;
   } else {
-    console.log(session.user);
     return <LayoutAuthenticated title="Airline Game | Home">
         <h1>Hello World!</h1>
         {session && <p>Welcome, {session.user.name}!</p>}
