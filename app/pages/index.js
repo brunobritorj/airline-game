@@ -1,16 +1,18 @@
 import { useSession } from 'next-auth/react';
-import Layout from '../components/Layout';
+import LayoutAuthenticated from '../components/LayoutAuthenticated';
+import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 
 export default function Home() {
   const { data: session } = useSession();
 
   if (!session) {
-    return <Layout />;
+    return <LayoutUnauthenticated />;
   } else {
-    return <Layout title="Airline Game | Home">
+    console.log(session.user);
+    return <LayoutAuthenticated title="Airline Game | Home">
         <h1>Hello World!</h1>
-        {session && <p>Welcome, {session.user.email}!</p>}
-      </Layout>;
+        {session && <p>Welcome, {session.user.name}!</p>}
+      </LayoutAuthenticated>;
 
   }
 

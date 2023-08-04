@@ -1,9 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
-export default function Layout({ title = 'Airline Game', children }) {
+export default function LayoutAuthenticated({ title = 'Airline Game', children }) {
   const { data: session } = useSession();
 
   return (
@@ -26,18 +26,13 @@ export default function Layout({ title = 'Airline Game', children }) {
       <div>
         <header>
           <nav>
-            {!session ? (
-              <button onClick={() => signIn('azure-ad')}>Sign in</button>
-            ) : (
-              <div>
-                <p>Welcome, {session.user.email}!</p>
-                <button onClick={() => signOut()}>Sign out</button>
-              </div>
-            )}
+            <div>
+              <p>{session.user.email}</p>
+              <button onClick={() => signOut()}>Sign out</button>
+            </div>
           </nav>
         </header>
         <main>
-          <h1>{title}</h1>
           {children}
         </main>
         <footer>...</footer>
