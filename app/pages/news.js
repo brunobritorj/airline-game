@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import Layout from '../components/Layout';
-import LayoutDivListContainer from '../components/LayoutDivListContainer'
+import DivListItems from '../components/div/DivListItems'
 
 const navbarSubItems = [
   { name: 'All', url: '/aircrafts' },
@@ -21,7 +21,7 @@ export default function Protected() {
   return (
     <Layout subtitle="News" icon="/images/news-icon.svg" navbarSubItems={navbarSubItems}>
       <p>Welcome, {session.user.name}!</p>
-      <LayoutDivListContainer />
+      <DivListItems />
     </Layout>
   );
 }

@@ -1,4 +1,4 @@
-export default function LayoutDivListContainer({}){
+export default function DivListItems({}){
   return (
     <>
       <div className="my-3 p-3 bg-body rounded shadow-sm">
