@@ -42,19 +42,3 @@ body {
   font-weight: 500;
   color: #343a40;
 }
-
-.bg-silver { background-color: silver; }
-.bg-grey { background-color: grey; }
-.bg-olive { background-color: olive; }
-.bg-green { background-color: #2ECC71; }
-.bg-blue { background-color: #2980B9; }
-.bg-purple { background-color: #9B59B6; }
-.bg-red { background-color: #C0392B; }
-.bg-orange { background-color: #F39C12; }
-.bg-yellow { background-color: #F4D03F; }
-.bg-brown { background-color: #943126; }
-.bg-fuchsia { background-color: fuchsia; }
-
-.nav {
-  --bs-nav-link-font-size: 12px;
-}
