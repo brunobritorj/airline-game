@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 import BaseLayout from '../components/BaseLayout';
 import DivListItems from '../components/div/DivListItems';
@@ -12,7 +13,14 @@ const navbarSubItems = [
 
 export default function pageNews() {
   const { data: session } = useSession();
+  const router = useRouter();
   if (!session) { return <LayoutUnauthenticated />; }
+
+  const userName = sessionStorage.getItem('userName')
+  const userEmail = sessionStorage.getItem('userEmail')
+  const userAirline = sessionStorage.getItem('userAirline')
+  const userColor = sessionStorage.getItem('userColor')
+  if (!userName || !userEmail || !userAirline || !userColor) { router.push('/')}
 
   const news = {
     title: "Recent news",
@@ -33,7 +41,7 @@ export default function pageNews() {
   }
 
   return (
-    <BaseLayout subtitle="Feed" color="silver" icon="/images/feed-color-icon.svg" description="Mantenha-se informado aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Feed" icon="/images/feed-color-icon.svg" description="Mantenha-se informado aqui" navbarSubItems={navbarSubItems}>
       <p>Bem vindo, {session.user.name}!</p>
       <DivListNews news={news}/>
     </BaseLayout>
