@@ -74,7 +74,7 @@ export default function pageAircrafts() {
   }
 
   return (
-    <BaseLayout subtitle="Aeronaves" color="silver" icon="/images/aircrafts-color-icon.svg" description="Gerencie as aeronaves aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Aeronaves" color={userColor} icon="/images/aircrafts-color-icon.svg" description="Gerencie as aeronaves aqui" navbarSubItems={navbarSubItems}>
       <p>Bem vindo, {session.user.name}!</p>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>

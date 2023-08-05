@@ -41,7 +41,7 @@ export default function pageNews() {
   }
 
   return (
-    <BaseLayout subtitle="Feed" icon="/images/feed-color-icon.svg" description="Mantenha-se informado aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Feed" icon="/images/feed-color-icon.svg" color={userColor} description="Mantenha-se informado aqui" navbarSubItems={navbarSubItems}>
       <p>Bem vindo, {session.user.name}!</p>
       <DivListNews news={news}/>
     </BaseLayout>
