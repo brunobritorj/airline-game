@@ -41,7 +41,7 @@ export default function pageAirports() {
   }
 
   return (
-    <BaseLayout subtitle="Aeroportos" color="silver" icon="/images/airports-color-icon.svg" description="Seus aeroportos" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Aeroportos" color="silver" icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui" navbarSubItems={navbarSubItems}>
       <p>Bem vindo, {session.user.name}!</p>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>

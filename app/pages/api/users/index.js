@@ -1,20 +1,79 @@
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 
-// GET /api/user/{id}
-export default async function handler(req, res) {
+// GET /api/users
+export default async function getUsers(req, res) {
+  try {
+    if (req.method === 'GET') {
+      const { email } = req.query;
 
-  // Connect to the database
-  await connectToDatabase();
+      // Connect to the database
+      await connectToDatabase();
 
-  // Access a collection and perform operations
-  const collection = client.db(DB_NAME).collection('users');
-  
-  // Query data from MongoDB
-  const data = await collection.find({}).toArray();
+      // Access a collection and perform operations
+      const collection = client.db(DB_NAME).collection('users');
 
-  // Close the database connection
-  client.close();
+      let data;
 
-  // Return the data as JSON response
-  res.status(200).json(data);
+      // If email is provided, query for a single user, else query for all users
+      if (email) {
+        data = await collection.findOne({ email });
+
+        if (!data) {
+          res.status(404).json({ error: 'User not found' });
+          return;
+        }
+      } else {
+        data = await collection.find({}).toArray();
+      }
+
+      // Close the database connection
+      client.close();
+
+      // Return the data as JSON response
+      res.status(200).json(data);
+    } else if (req.method === 'POST') {
+      // Handle user creation here
+      try {
+        const { email, name } = req.body;
+
+        if (!email || !name) {
+          res.status(400).json({ error: 'Email and name are required fields' });
+          return;
+        }
+
+        await connectToDatabase();
+
+        const collection = client.db(DB_NAME).collection('users');
+
+        // Check if the user already exists
+        const existingUser = await collection.findOne({ email });
+
+        if (existingUser) {
+          res.status(409).json({ error: 'User already exists' });
+          return;
+        }
+
+        // Create the new user
+        const newUser = { email, name };
+        const result = await collection.insertOne(newUser);
+      
+        if (!result || !result.insertedId) {
+          throw new Error('User creation failed');
+        }
+      
+        // Close the database connection
+        client.close();
+      
+        res.status(201).json(result.insertedId);
+      } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: 'Error creating user' });
+      }
+    } else {
+      res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (error) {
+    console.error('API route error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 }

@@ -1,0 +1,18 @@
+@endpoint = http://localhost:3000
+
+### GET all users
+GET {{endpoint}}/api/users HTTP/1.1
+content-type: application/json
+
+### GET a user by email
+GET {{endpoint}}/api/users?email=user1@email.com HTTP/1.1
+content-type: application/json
+
+###
+POST {{endpoint}}/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "name": "User2",
+    "email": "user2@email.com"
+}
