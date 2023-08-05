@@ -13,15 +13,17 @@ export default function Home() {
       .then(async response => {
         if (response.status === 404) {
           router.push('/newuser'); // First access of the user, redirect to create it in the DB
+          return; // Add this line to stop further execution
         } else if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
-        return response.json(); // Parse response as JSON
+        return response.json(); // Parse response as JSON to the next step (.then)
       })
       .then(data => {
-        console.log('User Data:', data);
-        router.push('/feed'); // Navigate to /feed if user alread exists
+        if (data) {
+          console.log('User Data:', data);
+          router.push('/feed'); // Navigate to /feed if user already exists
+        }
       })
       .catch(error => {
         console.error('Error:', error);

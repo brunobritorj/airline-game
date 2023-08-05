@@ -34,7 +34,10 @@ export default async function getUsers(req, res) {
     } else if (req.method === 'POST') {
       // Handle user creation here
       try {
-        const { email, name } = req.body;
+        const { email, name, airline = name, color = '#000000' } = req.body;
+        const assets = {
+          "cash": 100
+        };
 
         if (!email || !name) {
           res.status(400).json({ error: 'Email and name are required fields' });
@@ -54,7 +57,7 @@ export default async function getUsers(req, res) {
         }
 
         // Create the new user
-        const newUser = { email, name };
+        const newUser = { email, name, airline, color, assets };
         const result = await collection.insertOne(newUser);
       
         if (!result || !result.insertedId) {
