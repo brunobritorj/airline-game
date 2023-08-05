@@ -31,7 +31,13 @@ export default function NewUser() {
       if (!createUserResponse.ok) {
         throw new Error('Error creating user');
       }
+
       console.log('User created successfully');
+      sessionStorage.setItem('userName', session.user.name);
+      sessionStorage.setItem('userEmail', session.user.email);
+      sessionStorage.setItem('userAirline', airline);
+      sessionStorage.setItem('userColor', color);
+      
       router.push('/feed'); // Navigate to /feed on successful user creation
     } catch (error) {
       console.error('Error creating user:', error);
@@ -98,14 +104,14 @@ export default function NewUser() {
             <img className="mb-4" src="/images/favicon.svg" alt="" width="100" height="100" />
             <h1 className="h3 mb-3 fw-normal">Cria sua companhia aérea</h1>
             <div className="form-floating">
-              <input type="text" className="form-control" id="airline" value={airline} onChange={e => setAirline(e.target.value)} />
+              <input type="text" className="form-control" id="airline" value={airline} onChange={e => setAirline(e.target.value)} autoComplete="off" />
               <label className="form-label" for="airline">Nome:</label>
             </div>
             <div className="color-selector-div">
               <input type="color" id="color" className="form-control form-control-color color-selector" value={color} onChange={e => setColor(e.target.value)} />
             </div>
             <button className="w-100 btn btn-lg btn-secondary"type="submit">Fundar companhia</button>
-            <p className="mt-5 mb-3 text-muted">© 2017–2022</p>
+            <p className="mt-5 mb-3 text-muted">© 2017-2022</p>
           </form>
         </main>
       </>

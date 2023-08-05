@@ -21,7 +21,11 @@ export default function Home() {
       })
       .then(data => {
         if (data) {
-          console.log('User Data:', data);
+          //console.log('User Data:', data);
+          sessionStorage.setItem('userName', data.name);
+          sessionStorage.setItem('userEmail', data.email);
+          sessionStorage.setItem('userAirline', data.airline);
+          sessionStorage.setItem('userColor', data.color);
           router.push('/feed'); // Navigate to /feed if user already exists
         }
       })
