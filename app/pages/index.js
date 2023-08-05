@@ -10,7 +10,7 @@ export default function Home() {
     return <LayoutUnauthenticated />;
   }
   else {
-    router.push('/news');
+    router.push('/feed');
     return null;
   }
 

@@ -54,3 +54,7 @@ body {
 .bg-yellow { background-color: #F4D03F; }
 .bg-brown { background-color: #943126; }
 .bg-fuchsia { background-color: fuchsia; }
+
+.nav {
+  --bs-nav-link-font-size: 12px;
+}
