@@ -12,16 +12,16 @@ export default function NewUser() {
   const [color, setColor] = useState('#000000');
 
   const colorOptions = [
-    "#FF5733",
-    "#3498DB",
-    "#27AE60",
-    "#E74C3C",
-    "#9B59B6",
-    "#F39C12",
-    "#1ABC9C",
-    "#2C3E50",
-    "#E67E22",
-    "#8E44AD"
+    { color: "#FF5733", alias: "Vermelho" },
+    { color: "#7B241C", alias: "Vinho" },
+    { color: "#1A5276", alias: "Azul (escuro)" },
+    { color: "#5DADE2", alias: "Azul (claro)" },
+    { color: "#196F3D", alias: "Verde (escuro)" },
+    { color: "#58D68D", alias: "Verde (claro)" },
+    { color: "#4A235A", alias: "Roxo" },
+    { color: "#BB8FCE", alias: "Violeta" },
+    { color: "#F39C12", alias: "Laranja" },
+    { color: "#873600", alias: "Marrom" },
   ];
 
   const createUser = async (e) => {
@@ -127,9 +127,12 @@ export default function NewUser() {
               <label className="form-label" htmlFor="airline">Nome:</label>
             </div>
             <div className="color-selector-div">
+              <label htmlFor="color" className="form-label">Selecione a cor:</label>
               <select id="color" className="form-control color-selector" value={color} onChange={(e) => setColor(e.target.value)}>
                 {colorOptions.map((option) => (
-                  <option key={option} value={option} style={{ backgroundColor: option }} />
+                  <option key={option.color} value={option.color} style={{ backgroundColor: option.color }} >
+                    {option.alias}
+                  </option>
                 ))}
               </select>
             </div>
