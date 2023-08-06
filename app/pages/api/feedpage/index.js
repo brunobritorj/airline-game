@@ -37,7 +37,7 @@ export default async function apiFeedPage(req, res) {
             title: 1,
             text: 1,
             airline: { $ifNull: ["$airlineInfo._id", null] },
-            color: { $ifNull: ["$airlineInfo.color", "black"] },
+            color: { $ifNull: ["$airlineInfo.color", "#212529"] },
           }
         },
         {

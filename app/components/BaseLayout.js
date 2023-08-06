@@ -5,13 +5,6 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react';
 import LayoutHeader from './div/LayoutHeader'
 
-const navbarItems = [
-  { name: 'News', url: '/news' },
-  { name: 'Aircrafts', url: '/aircrafts' },
-  { name: 'Airports', url: '/airports' },
-  { name: 'Routes', url: '/routes' }
-];
-
 export default function LayoutAuthenticated({
     title = 'Airline Game',
     subtitle,

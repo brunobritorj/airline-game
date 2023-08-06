@@ -22,7 +22,7 @@ export default function DivListAircrafts({ aircrafts }) {
               <>
                 <div className="d-flex justify-content-between">
                   <strong className="text-gray-dark">{item.model}</strong>
-                  <Link href={`/aircrafts/${item._id}`}>Comprar</Link>
+                  <Link href={`/aircrafts/${item._id}`}>Ver</Link>
                 </div>
                 <span className="d-block">{moneyFormat(item.price)}</span>
               </>

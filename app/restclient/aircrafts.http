@@ -15,3 +15,7 @@ content-type: application/json
 ### GET /api/aircrafts (other airlines)
 GET {{endpoint}}/api/aircrafts?airline=!64cfa7977963982ddff21349 HTTP/1.1
 content-type: application/json
+
+### GET /api/aircrafts/{id}
+GET {{endpoint}}/api/aircrafts/64cfca626af5ba0213a25617 HTTP/1.1
+content-type: application/json

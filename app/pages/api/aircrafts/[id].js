@@ -1,29 +1,15 @@
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 import { ObjectId } from 'mongodb';
 
-// -> /api/feed
-export default async function apiAircrafts(req, res) {
+// -> /api/aircraft
+export default async function apiAircraft(req, res) {
   try {
     if (req.method === 'GET') {
 
-      const { airline } = req.query;
+      const aircraftId = req.query.id;
 
-      let query = {};
-      if (airline) {
-        if (airline === 'none') {
-          query.airline = null;
-        } else if (airline.startsWith('!')) {
-          const airlineValue = new ObjectId(airline.substring(1));
-          query.airline = { $not: { $in: [null, airlineValue] }};
-        } else {
-          query.airline = new ObjectId(airline);
-        }
-      }
-
+      /*
       const queryPipeline = [
-        {
-          $match: query,
-        },
         {
           $lookup: {
             from: "users",
@@ -38,9 +24,9 @@ export default async function apiAircrafts(req, res) {
         {
           $project: {
             _id: 1,
-            model: 1,
-            price: 1,
-            airline: { $ifNull: ["$airlineInfo.airline", null] },
+            title: 1,
+            text: 1,
+            airline: { $ifNull: ["$airlineInfo._id", null] },
             color: { $ifNull: ["$airlineInfo.color", "#212529"] },
           }
         },
@@ -48,27 +34,23 @@ export default async function apiAircrafts(req, res) {
           $sort: { _id: -1 }, // Sort by _id in descending order (newest first)
         },
         {
-          $limit: 50, // Limit the results to 50 documents
+          $limit: 10, // Limit the results to 10 documents
         }
       ];
+      */
 
       // Connect to the database
       await connectToDatabase();
 
       // Perform the query
-      let data;
-      data = await client.db(DB_NAME).collection('aircrafts').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      const aircraft = await client.db(DB_NAME).collection('aircrafts').findOne({ _id: new ObjectId(aircraftId) });
       
       // Close the database connection
       client.close();
 
       // Return the data as JSON response
-      res.status(200).json(data);
+      res.status(200).json(aircraft);
       
-    } else if (req.method === 'POST') {
-
-      res.status(405).json({ error: 'Method not allowed' });
-
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }
