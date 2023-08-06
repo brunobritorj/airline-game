@@ -5,12 +5,36 @@ export default async function apiFeed(req, res) {
   try {
     if (req.method === 'GET') {
 
+      const queryPipeline = [
+        {
+          $lookup: {
+            from: "users",
+            localField: "airline",
+            foreignField: "_id",
+            as: "airlineInfo"
+          }
+        },
+        {
+          $unwind: "$airlineInfo"
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            text: 1,
+            "airline": "$airlineInfo._id",
+            "color": "$airlineInfo.color"
+          }
+        }
+      ];
+
       // Connect to the database
       await connectToDatabase();
 
       // Perform the query
       let data;
-      data = await client.db(DB_NAME).collection('feed').find({}).toArray();
+      data = await client.db(DB_NAME).collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      //data = await client.db(DB_NAME).collection('feed').find({}).toArray();
       
       // Close the database connection
       client.close();
@@ -58,3 +82,4 @@ export default async function apiFeed(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+

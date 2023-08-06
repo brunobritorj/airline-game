@@ -14,8 +14,10 @@ export default function DivListItems({genericItems}){
           </div>
         </div>
       ))}
-      <small className="d-block text-end mt-3">
-        <a href="https://getbootstrap.com/docs/5.2/examples/offcanvas-navbar/#">{genericItems.bottomText}</a>
-      </small>
+      {genericItems.bottom && (
+        <small className="d-block text-end mt-3">
+          <a href={genericItems.bottom.link}>{genericItems.bottom.text}</a>
+        </small>
+      )}
     </div>
 )};
