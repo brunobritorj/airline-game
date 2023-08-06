@@ -6,7 +6,6 @@ import BaseLayout from '../components/BaseLayout';
 import DivListNews from '../components/div/DivListNews'
 import DivListAssets from '../components/div/DivListAssets';
 
-// navbarSubItems temporary removed
 const navbarSubItems = [
   { name: 'Todas', url: '/feed' },
   //{ name: 'Minhas', url: '/feed?filter=mine' },

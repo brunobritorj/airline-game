@@ -64,7 +64,7 @@ export default async function apiUsers(req, res) {
       
         // Post new msg on feed but doesn't care about the result
         const newMsg = {
-          title: "Nova companhia fundada!",
+          title: "Nova companhia fundada",
           text: `A ${airline} é a mais nova companhia aerea no mercado, fundada por ${name}.`,
           airline: result.insertedId
         };

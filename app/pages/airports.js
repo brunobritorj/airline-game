@@ -1,26 +1,31 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 import BaseLayout from '../components/BaseLayout';
 import DivListItems from '../components/div/DivListItems';
 
 const navbarSubItems = [
-  { name: 'All', url: '/airports' },
-  { name: 'Mine', url: '/airports?mine' },
-  { name: 'Market', url: '/airports?market' },
+  { name: 'Todos', url: '/airports' },
+  //{ name: 'Mine', url: '/airports?mine' },
+  //{ name: 'Market', url: '/airports?market' },
 ]
-
 
 export default function pageAirports() {
   const { data: session } = useSession();
   const router = useRouter();
   if (!session) { return <LayoutUnauthenticated />; }
 
-  const userName = sessionStorage.getItem('userName')
-  const userEmail = sessionStorage.getItem('userEmail')
-  const userAirline = sessionStorage.getItem('userAirline')
-  const userColor = sessionStorage.getItem('userColor')
-  if (!userName || !userEmail || !userAirline || !userColor) { router.push('/')}
+  // Reading all user data from sessionStorage
+  const properties = ['_id', 'name', 'email', 'airline', 'color'];
+  const userData = {};
+  properties.forEach(property => {
+    userData[property] = sessionStorage.getItem(property);
+  });
+  if (!userData._id) {
+    router.push('/');
+    return;
+  }
   
   const genericItems = {
     title: "Recent updates",
@@ -49,7 +54,7 @@ export default function pageAirports() {
   }
 
   return (
-    <BaseLayout subtitle="Aeroportos" color={userColor} icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Aeroportos" color={sessionStorage.getItem('color')} icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui" navbarSubItems={navbarSubItems}>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );

@@ -15,17 +15,20 @@ export default function NewUser() {
     e.preventDefault(); // Prevent default form submission
 
     try {
+
+      const userData = {
+        name: session.user.name,
+        email: session.user.email,
+        airline,
+        color,        
+      }
+
       const createUserResponse = await fetch('/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: session.user.name,
-          email: session.user.email,
-          airline,
-          color,
-        }),
+        body: JSON.stringify(userData),
       });
 
       if (!createUserResponse.ok) {
@@ -33,11 +36,14 @@ export default function NewUser() {
       }
 
       console.log('User created successfully');
-      sessionStorage.setItem('userName', session.user.name);
-      sessionStorage.setItem('userEmail', session.user.email);
-      sessionStorage.setItem('userAirline', airline);
-      sessionStorage.setItem('userColor', color);
-      
+
+      // Save user data to sessionStorage
+      Object.entries(userData).forEach(([key, value]) => {
+        if (typeof value != 'object' && value !== null) {
+          sessionStorage.setItem(key, value);
+        }
+      });
+
       router.push('/feed'); // Navigate to /feed on successful user creation
     } catch (error) {
       console.error('Error creating user:', error);

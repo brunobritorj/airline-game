@@ -41,11 +41,16 @@ export default function pageAircrafts() {
   const router = useRouter();
   if (!session) { return <LayoutUnauthenticated />; }
 
-  const userName = sessionStorage.getItem('userName')
-  const userEmail = sessionStorage.getItem('userEmail')
-  const userAirline = sessionStorage.getItem('userAirline')
-  const userColor = sessionStorage.getItem('userColor')
-  if (!userName || !userEmail || !userAirline || !userColor) { router.push('/')}
+  // Reading all user data from sessionStorage
+  const properties = ['_id', 'name', 'email', 'airline', 'color'];
+  const userData = {};
+  properties.forEach(property => {
+    userData[property] = sessionStorage.getItem(property);
+  });
+  if (!userData._id) {
+    router.push('/');
+    return;
+  }
   
   const genericItems = {
     title: "Recent updates",
@@ -74,7 +79,7 @@ export default function pageAircrafts() {
   }
 
   return (
-    <BaseLayout subtitle="Aeronaves" color={userColor} icon="/images/aircrafts-color-icon.svg" description="Gerencie as aeronaves aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Aeronaves" color={sessionStorage.getItem('color')} icon="/images/aircrafts-color-icon.svg" description="Gerencie as aeronaves aqui" navbarSubItems={navbarSubItems}>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );

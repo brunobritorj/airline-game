@@ -1,0 +1,29 @@
+[
+  {
+    "iata": "ORD",
+    "airport": "Chicago O'Hare International",
+    "city": "Chicago",
+    "state": "IL",
+    "country": "USA",
+    "lat": 41.979595,
+    "lon": -87.904464
+  },
+  {
+      "iata": "DFW",
+      "airport": "Dallas-Fort Worth International",
+      "city": "Dallas-Fort Worth",
+      "state": "TX",
+      "country": "USA",
+      "lat": 32.89595056,
+      "lon": -97.0372
+  },
+  {
+    "iata": "JFK",
+    "airport": "John F Kennedy Intl",
+    "city": "New York",
+    "state": "NY",
+    "country": "USA",
+    "lat": 40.63975111,
+    "lon": -73.77892556
+  }
+]

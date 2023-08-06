@@ -1,0 +1,17 @@
+[
+  {
+    "owner": null,
+    "model": "A",
+    "price": 200000000
+  },
+  {
+    "owner": null,
+    "model": "B",
+    "price": 100000000
+  },
+  {
+    "owner": null,
+    "model": "C",
+    "price": 50000000
+  }
+]

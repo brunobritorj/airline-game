@@ -16,11 +16,16 @@ export default function pageRoutes() {
   const router = useRouter();
   if (!session) { return <LayoutUnauthenticated />; }
 
-  const userName = sessionStorage.getItem('userName')
-  const userEmail = sessionStorage.getItem('userEmail')
-  const userAirline = sessionStorage.getItem('userAirline')
-  const userColor = sessionStorage.getItem('userColor')
-  if (!userName || !userEmail || !userAirline || !userColor) { router.push('/')}
+  // Reading all user data from sessionStorage
+  const properties = ['_id', 'name', 'email', 'airline', 'color'];
+  const userData = {};
+  properties.forEach(property => {
+    userData[property] = sessionStorage.getItem(property);
+  });
+  if (!userData._id) {
+    router.push('/');
+    return;
+  }
   
   const genericItems = {
     title: "Recent updates",
@@ -49,7 +54,7 @@ export default function pageRoutes() {
   }
 
   return (
-    <BaseLayout subtitle="Rotas" color={userColor} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui" navbarSubItems={navbarSubItems}>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );
