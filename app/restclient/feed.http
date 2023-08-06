@@ -1,5 +1,9 @@
 @endpoint = http://localhost:3000
 
-### GET feed
+### GET /api/feed
 GET {{endpoint}}/api/feed HTTP/1.1
+content-type: application/json
+
+### GET /api/feedpage?email=brunobritorj#outook.com
+GET {{endpoint}}/api/feedpage?email=brunobritorj#outook.com HTTP/1.1
 content-type: application/json

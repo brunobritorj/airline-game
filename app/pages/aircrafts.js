@@ -1,87 +1,54 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 import BaseLayout from '../components/BaseLayout';
-import DivListItems from '../components/div/DivListItems';
+import DivListAircrafts from '../components/div/DivListAircrafts';
 
 const navbarSubItems = [
-  { name: 'All', url: '/aircrafts' },
-  { name: 'Mine', url: '/aircrafts?mine' },
-  { name: 'Market', url: '/aircrafts?market' },
-]
+  { name: 'Todas', url: '/aircrafts' },
+  { name: 'Minha frota', url: '/aircrafts?filter=mine' },
+  { name: 'Concorrentes', url: '/aircrafts?filter=rivals' },
+  { name: 'À venda', url: '/aircrafts?filter=sale' },
+];
 
-const genericItems = {
-  title: "Recent updates",
-  items: [
-    {
-      color: "blue",
-      name: "Aircraft A",
-      text: "$100",
-      link: {
-        name: "Buy",
-        url: "/post/1"
-      }
-    },
-    {
-      color: "red",
-      name: "Aircraft B",
-      text: "$300",
-      link: {
-        name: "Sell",
-        url: "/post/2"
-      }
-    }
-  ],
-  bottomText: "All",
-  bottonLink: "/"
-}
-
-export default function pageAircrafts() {
+export default function PageNews() {
   const { data: session } = useSession();
   const router = useRouter();
-  if (!session) { return <LayoutUnauthenticated />; }
 
-  // Reading all user data from sessionStorage
-  const properties = ['_id', 'name', 'email', 'airline', 'color'];
-  const userData = {};
-  properties.forEach(property => {
-    userData[property] = sessionStorage.getItem(property);
-  });
-  if (!userData._id) {
-    router.push('/');
-    return;
+  // State variable for aircrafts
+  const [aircraftsData, setAircraftsData] = useState(null);
+
+  useEffect(() => {
+    // Reading all user data from sessionStorage
+    const properties = ['_id', 'name', 'email', 'airline', 'color'];
+    const userData = {};
+    properties.forEach(property => {
+      userData[property] = sessionStorage.getItem(property);
+    });
+    if (!userData._id) {
+      router.push('/');
+    } else {
+      // Fetch aircrafts from an API endpoint
+      fetch('/api/aircrafts') // Replace with your actual API endpoint
+        .then(response => response.json())
+        .then(data => {
+          setAircraftsData(data);
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('An error occurred while fetching data:', error);
+        });
+    }
+  }, []); // Run this effect only once, when the component mounts
+
+  if (!session) {
+    return <LayoutUnauthenticated />;
   }
   
-  const genericItems = {
-    title: "Recent updates",
-    items: [
-      {
-        color: "blue",
-        name: "Aircraft A",
-        text: "$100",
-        link: {
-          name: "Buy",
-          url: "/post/1"
-        }
-      },
-      {
-        color: "red",
-        name: "Aircraft B",
-        text: "$300",
-        link: {
-          name: "Sell",
-          url: "/post/2"
-        }
-      }
-    ],
-    bottomText: "All",
-    bottonLink: "/"
-  }
-
   return (
-    <BaseLayout subtitle="Aeronaves" color={sessionStorage.getItem('color')} icon="/images/aircrafts-color-icon.svg" description="Gerencie as aeronaves aqui" navbarSubItems={navbarSubItems}>
-      <DivListItems genericItems={genericItems}/>
+    <BaseLayout subtitle="Aeronaves" navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={sessionStorage.getItem('color')} description="Gerencie as aeronaves aqui!">
+      {aircraftsData && <DivListAircrafts aircrafts={aircraftsData} />} {/* Render only when aircraftsData is available */}
     </BaseLayout>
   );
-
 }

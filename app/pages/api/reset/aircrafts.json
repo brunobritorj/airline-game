@@ -1,17 +1,20 @@
 [
   {
-    "owner": null,
     "model": "A",
-    "price": 200000000
+    "price": 200000000,
+    "airline": null,
+    "route": null
   },
   {
-    "owner": null,
     "model": "B",
-    "price": 100000000
+    "price": 100000000,
+    "airline": null,
+    "route": null
   },
   {
-    "owner": null,
     "model": "C",
-    "price": 50000000
+    "price": 50000000,
+    "airline": null,
+    "route": null
   }
 ]

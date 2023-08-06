@@ -45,35 +45,35 @@ export default function PageNews() {
       router.push('/');
       return;
     }
-
-    fetch(`/api/feedpage?email=${session.user.email}`)
-      .then(async response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data) {
-          const assets = [
-            {
-              icon: "/images/bank-color-icon.svg",
-              name: "Saldo bancário",
-              text: `$ ${data.userData.assets.cash}`
-            },
-          ];
-          setAssetsData(assets); // Store fetched data in state
-          const news = {
-            title: "Notícias recentes",
-            items: data.feedData
-          };
-          setNewsData(news); // Store fetched data in state
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
+    else {
+      fetch(`/api/feedpage?email=${session.user.email}`)
+        .then(async response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data) {
+            const assets = [
+              {
+                icon: "/images/bank-color-icon.svg",
+                name: "Saldo bancário",
+                text: `$ ${data.userData.assets.cash}`
+              },
+            ];
+            setAssetsData(assets); // Store fetched data in state
+            const news = {
+              title: "Notícias recentes",
+              items: data.feedData
+            };
+            setNewsData(news); // Store fetched data in state
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
   }, [session, router]);
 
   if (!session) {

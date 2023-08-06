@@ -1,0 +1,5 @@
+@endpoint = http://localhost:3000
+
+### GET /api/aircrafts
+GET {{endpoint}}/api/aircrafts HTTP/1.1
+content-type: application/json

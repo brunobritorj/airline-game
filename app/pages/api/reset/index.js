@@ -11,8 +11,9 @@ export default async function apiGame(req, res) {
 
       // Drop Collections
       try { await client.db(DB_NAME).collection('users').drop(); } catch (err) { console.error(`Error dropping collection users:`, err); }
-      try { await client.db(DB_NAME).collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
       try { await client.db(DB_NAME).collection('airports').drop(); } catch (err) { console.error(`Error dropping collection airports:`, err); }
+      try { await client.db(DB_NAME).collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
+      try { await client.db(DB_NAME).collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
 
       // Push initial data
       const fs = require('fs');
