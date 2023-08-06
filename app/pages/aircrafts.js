@@ -9,7 +9,7 @@ const navbarSubItems = [
   { name: 'Todas', url: '/aircrafts' },
   { name: 'Minha frota', url: '/aircrafts?filter=mine' },
   { name: 'Concorrentes', url: '/aircrafts?filter=rivals' },
-  { name: 'À venda', url: '/aircrafts?filter=sale' },
+  { name: 'Loja', url: '/aircrafts?filter=sale' },
 ];
 
 export default function PageNews() {
