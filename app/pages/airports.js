@@ -50,7 +50,6 @@ export default function pageAirports() {
 
   return (
     <BaseLayout subtitle="Aeroportos" color={userColor} icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui" navbarSubItems={navbarSubItems}>
-      <p>Bem vindo, {session.user.name}!</p>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );

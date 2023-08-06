@@ -50,7 +50,6 @@ export default function pageRoutes() {
 
   return (
     <BaseLayout subtitle="Rotas" color={userColor} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui" navbarSubItems={navbarSubItems}>
-      <p>Bem vindo, {session.user.name}!</p>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );

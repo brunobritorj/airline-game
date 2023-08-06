@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'; // Import useState and useEffect
 import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 import BaseLayout from '../components/BaseLayout';
 import DivListNews from '../components/div/DivListNews'
+import DivListAssets from '../components/div/DivListAssets';
 
 // navbarSubItems temporary removed
 const navbarSubItems = [
@@ -62,9 +63,18 @@ export default function PageNews() {
     return <LayoutUnauthenticated />;
   }
 
+  const assets = [
+    {
+      icon: "/images/bank-color-icon.svg",
+      name: "Saldo bancário",
+      text: "$ 100.000.000,",
+    },
+  ];
+
   return (
     <BaseLayout subtitle="Feed" icon="/images/feed-color-icon.svg" color={sessionStorage.getItem('userColor')} description="Mantenha-se informado aqui">
       <p>Bem vindo, {session.user.name}!</p>
+      <DivListAssets assets={assets} />
       {newsData && <DivListNews news={newsData} />} {/* Render only when newsData is available */}
     </BaseLayout>
   );
