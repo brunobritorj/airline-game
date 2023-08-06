@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 
 // GET /api/user/{id}
-export async function getUserHandler(req, res) {
+export async function apiUserById(req, res) {
   try {
     
     await connectToDatabase();

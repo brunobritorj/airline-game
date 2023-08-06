@@ -105,13 +105,13 @@ export default function NewUser() {
             <h1 className="h3 mb-3 fw-normal">Cria sua companhia aérea</h1>
             <div className="form-floating">
               <input type="text" className="form-control" id="airline" value={airline} onChange={e => setAirline(e.target.value)} autoComplete="off" />
-              <label className="form-label" for="airline">Nome:</label>
+              <label className="form-label" htmlFor="airline">Nome:</label>
             </div>
             <div className="color-selector-div">
               <input type="color" id="color" className="form-control form-control-color color-selector" value={color} onChange={e => setColor(e.target.value)} />
             </div>
             <button className="w-100 btn btn-lg btn-secondary"type="submit">Fundar companhia</button>
-            <p className="mt-5 mb-3 text-muted">© 2017-2022</p>
+            <p className="mt-5 mb-3 text-muted">2023 @ Airline Game</p>
           </form>
         </main>
       </>

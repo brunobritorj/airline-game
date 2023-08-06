@@ -1,7 +1,7 @@
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 
-// GET /api/users
-export default async function getUsers(req, res) {
+// -> /api/users
+export default async function apiUsers(req, res) {
   try {
     if (req.method === 'GET') {
       const { email } = req.query;
@@ -46,10 +46,8 @@ export default async function getUsers(req, res) {
 
         await connectToDatabase();
 
-        const collection = client.db(DB_NAME).collection('users');
-
         // Check if the user already exists
-        const existingUser = await collection.findOne({ email });
+        const existingUser = await client.db(DB_NAME).collection('users').findOne({ email });
 
         if (existingUser) {
           res.status(409).json({ error: 'User already exists' });
@@ -58,15 +56,23 @@ export default async function getUsers(req, res) {
 
         // Create the new user
         const newUser = { email, name, airline, color, assets };
-        const result = await collection.insertOne(newUser);
+        const result = await client.db(DB_NAME).collection('users').insertOne(newUser);
       
         if (!result || !result.insertedId) {
           throw new Error('User creation failed');
         }
       
+        // Post new msg on feed but doesn't care about the result
+        const newMsg = {
+          title: "Nova companhia fundada",
+          text: "Texto vira aqui",
+          airline
+        };
+        await client.db(DB_NAME).collection('feed').insertOne(newMsg);
+
         // Close the database connection
         client.close();
-      
+
         res.status(201).json(result.insertedId);
       } catch (error) {
         console.error('Error creating user:', error);
