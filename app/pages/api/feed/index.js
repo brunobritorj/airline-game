@@ -15,26 +15,32 @@ export default async function apiFeed(req, res) {
           }
         },
         {
-          $unwind: "$airlineInfo"
+          $unwind: { path: "$airlineInfo", preserveNullAndEmptyArrays: true },
         },
         {
           $project: {
             _id: 1,
             title: 1,
             text: 1,
-            "airline": "$airlineInfo._id",
-            "color": "$airlineInfo.color"
+            airline: { $ifNull: ["$airlineInfo._id", null] },
+            color: { $ifNull: ["$airlineInfo.color", "black"] },
           }
+        },
+        {
+          $sort: { _id: -1 }, // Sort by _id in descending order (newest first)
+        },
+        {
+          $limit: 10, // Limit the results to 10 documents
         }
       ];
 
+      
       // Connect to the database
       await connectToDatabase();
 
       // Perform the query
       let data;
       data = await client.db(DB_NAME).collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
-      //data = await client.db(DB_NAME).collection('feed').find({}).toArray();
       
       // Close the database connection
       client.close();
