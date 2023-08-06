@@ -9,9 +9,9 @@ import DivListAssets from '../components/div/DivListAssets';
 // navbarSubItems temporary removed
 const navbarSubItems = [
   { name: 'Todas', url: '/feed' },
-  { name: 'Minhas', url: '/feed?mine' },
-  { name: 'Concorrentes', url: '/feed?rival' },
-  { name: 'Outros', url: '/feed?other' },
+  { name: 'Minhas', url: '/feed?filter=mine' },
+  { name: 'Concorrentes', url: '/feed?filter=rival' },
+  { name: 'Outros', url: '/feed?filter=others' },
 ]
 
 export default function PageNews() {
@@ -25,6 +25,9 @@ export default function PageNews() {
       text: "Carregando ..."
     },
   ]); // State to hold fetched data, with default value of loading
+  
+  // Accessing query parameters
+  const { filter } = router.query;
 
   useEffect(() => {
     // Test if user has a session
