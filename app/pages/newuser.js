@@ -11,6 +11,19 @@ export default function NewUser() {
   const [airline, setAirline] = useState('');
   const [color, setColor] = useState('#000000');
 
+  const colorOptions = [
+    "#FF5733",
+    "#3498DB",
+    "#27AE60",
+    "#E74C3C",
+    "#9B59B6",
+    "#F39C12",
+    "#1ABC9C",
+    "#2C3E50",
+    "#E67E22",
+    "#8E44AD"
+  ];
+
   const createUser = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
@@ -114,7 +127,11 @@ export default function NewUser() {
               <label className="form-label" htmlFor="airline">Nome:</label>
             </div>
             <div className="color-selector-div">
-              <input type="color" id="color" className="form-control form-control-color color-selector" value={color} onChange={e => setColor(e.target.value)} />
+              <select id="color" className="form-control color-selector" value={color} onChange={(e) => setColor(e.target.value)}>
+                {colorOptions.map((option) => (
+                  <option key={option} value={option} style={{ backgroundColor: option }} />
+                ))}
+              </select>
             </div>
             <button className="w-100 btn btn-lg btn-secondary"type="submit">Fundar companhia</button>
             <p className="mt-5 mb-3 text-muted">2023 @ Airline Game</p>
