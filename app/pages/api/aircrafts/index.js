@@ -1,11 +1,29 @@
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
+import { ObjectId } from 'mongodb';
 
 // -> /api/feed
 export default async function apiAircrafts(req, res) {
   try {
     if (req.method === 'GET') {
 
+      const { airline } = req.query;
+
+      let query = {};
+      if (airline) {
+        if (airline === 'none') {
+          query.airline = null;
+        } else if (airline.startsWith('!')) {
+          const airlineValue = new ObjectId(airline.substring(1));
+          query.airline = { $not: { $in: [null, airlineValue] }};
+        } else {
+          query.airline = new ObjectId(airline);
+        }
+      }
+
       const queryPipeline = [
+        {
+          $match: query,
+        },
         {
           $lookup: {
             from: "users",

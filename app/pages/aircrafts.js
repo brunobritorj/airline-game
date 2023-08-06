@@ -16,6 +16,9 @@ export default function PageNews() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // Accessing query parameters
+  const { filter } = router.query;
+
   // State variable for aircrafts
   const [aircraftsData, setAircraftsData] = useState(null);
 
@@ -30,17 +33,20 @@ export default function PageNews() {
       router.push('/');
     } else {
       // Fetch aircrafts from an API endpoint
-      fetch('/api/aircrafts') // Replace with your actual API endpoint
+      let url = '/api/aircrafts'
+      if (filter === 'mine') { url = `/api/aircrafts?airline=${userData._id}`}
+      else if (filter === 'rivals') { url = `/api/aircrafts?airline=!${userData._id}`}
+      else if (filter === 'sale') { url = `/api/aircrafts?airline=none`}
+      fetch(url) // Replace with your actual API endpoint
         .then(response => response.json())
         .then(data => {
           setAircraftsData(data);
-          console.log(data);
         })
         .catch(error => {
           console.error('An error occurred while fetching data:', error);
         });
     }
-  }, []); // Run this effect only once, when the component mounts
+  }, [filter]); // Run this effect only once, when the component mounts
 
   if (!session) {
     return <LayoutUnauthenticated />;
@@ -52,3 +58,17 @@ export default function PageNews() {
     </BaseLayout>
   );
 }
+
+/*
+### GET /api/aircrafts (on sale)
+GET {{endpoint}}/api/aircrafts?airline=none HTTP/1.1
+content-type: application/json
+
+### GET /api/aircrafts (mine)
+GET {{endpoint}}/api/aircrafts?airline=64cfa7977963982ddff21349 HTTP/1.1
+content-type: application/json
+
+### GET /api/aircrafts (other airlines)
+GET {{endpoint}}/api/aircrafts?airline=!64cfa7977963982ddff21349 HTTP/1.1
+content-type: application/json
+*/
