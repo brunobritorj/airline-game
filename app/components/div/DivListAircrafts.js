@@ -1,3 +1,5 @@
+import moneyFormat from '../../utils/moneyFormat'
+
 export default function DivListAircrafts({ aircrafts }) {
   return (
     <div className="my-3 p-3 bg-body rounded shadow-sm">
@@ -21,7 +23,7 @@ export default function DivListAircrafts({ aircrafts }) {
                   <strong className="text-gray-dark">{item.model}</strong>
                   <a href={`/aircrafts/${item._id}`}>Comprar</a>
                 </div>
-                <span className="d-block">$ {item.price}</span>
+                <span className="d-block">{moneyFormat(item.price)}</span>
               </>
             )}
             </div>

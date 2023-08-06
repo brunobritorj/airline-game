@@ -5,6 +5,7 @@ import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 import BaseLayout from '../components/BaseLayout';
 import DivListNews from '../components/div/DivListNews'
 import DivListAssets from '../components/div/DivListAssets';
+import moneyFormat from '../utils/moneyFormat'
 
 const navbarSubItems = [
   { name: 'Todas', url: '/feed' },
@@ -59,7 +60,7 @@ export default function PageNews() {
               {
                 icon: "/images/bank-color-icon.svg",
                 name: "Saldo bancário",
-                text: `$ ${data.userData.assets.cash}`
+                text: moneyFormat(data.userData.assets.cash)
               },
             ];
             setAssetsData(assets); // Store fetched data in state

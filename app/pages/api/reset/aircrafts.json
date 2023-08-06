@@ -1,18 +1,18 @@
 [
   {
-    "model": "A",
+    "model": "Grande",
     "price": 200000000,
     "airline": null,
     "route": null
   },
   {
-    "model": "B",
+    "model": "Média",
     "price": 100000000,
     "airline": null,
     "route": null
   },
   {
-    "model": "C",
+    "model": "Pequena",
     "price": 50000000,
     "airline": null,
     "route": null
