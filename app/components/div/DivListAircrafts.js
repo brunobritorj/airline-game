@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import moneyFormat from '../../utils/moneyFormat'
 
 export default function DivListAircrafts({ aircrafts }) {
@@ -21,7 +22,7 @@ export default function DivListAircrafts({ aircrafts }) {
               <>
                 <div className="d-flex justify-content-between">
                   <strong className="text-gray-dark">{item.model}</strong>
-                  <a href={`/aircrafts/${item._id}`}>Comprar</a>
+                  <Link href={`/aircrafts/${item._id}`}>Comprar</Link>
                 </div>
                 <span className="d-block">{moneyFormat(item.price)}</span>
               </>
