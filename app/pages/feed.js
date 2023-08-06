@@ -9,9 +9,9 @@ import DivListAssets from '../components/div/DivListAssets';
 // navbarSubItems temporary removed
 const navbarSubItems = [
   { name: 'Todas', url: '/feed' },
-  { name: 'Minhas', url: '/feed?filter=mine' },
-  { name: 'Concorrentes', url: '/feed?filter=rival' },
-  { name: 'Outros', url: '/feed?filter=others' },
+  //{ name: 'Minhas', url: '/feed?filter=mine' },
+  //{ name: 'Concorrentes', url: '/feed?filter=rival' },
+  //{ name: 'Outros', url: '/feed?filter=others' },
 ]
 
 export default function PageNews() {
