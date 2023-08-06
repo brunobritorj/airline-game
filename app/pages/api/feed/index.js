@@ -34,7 +34,6 @@ export default async function apiFeed(req, res) {
         }
       ];
 
-      
       // Connect to the database
       await connectToDatabase();
 

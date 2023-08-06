@@ -36,7 +36,7 @@ export default async function apiUsers(req, res) {
       try {
         const { email, name, airline = name, color = '#000000' } = req.body;
         const assets = {
-          "cash": 100
+          "cash": 100000000
         };
 
         if (!email || !name) {

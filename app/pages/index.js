@@ -21,11 +21,14 @@ export default function Home() {
       })
       .then(data => {
         if (data) {
-          //console.log('User Data:', data);
-          sessionStorage.setItem('userName', data.name);
-          sessionStorage.setItem('userEmail', data.email);
-          sessionStorage.setItem('userAirline', data.airline);
-          sessionStorage.setItem('userColor', data.color);
+
+          // Save user data to sessionStorage
+          Object.entries(data).forEach(([key, value]) => {
+            if (typeof value != 'object' && value !== null) {
+              sessionStorage.setItem(key, value);
+            }
+          });
+
           router.push('/feed'); // Navigate to /feed if user already exists
         }
       })

@@ -19,7 +19,6 @@ export default function LayoutAuthenticated({
     icon = '/images/favicon.svg',
     description = "Generic description",
     navbarSubItems = [],
-    navbarSubItemActive = null,
     children
   }) {
 
@@ -38,15 +37,7 @@ export default function LayoutAuthenticated({
           <nav className="nav" aria-label="Secondary navigation">
             {navbarSubItems.map((item, index) => (
               <React.Fragment key={index}>
-                {navbarSubItemActive === item.name ? (
-                  <Link className="nav-link active" aria-current="page" href={item.url}>
-                    {item.name}
-                  </Link>
-                ) : (
-                  <Link className="nav-link" href={item.url}>
-                    {item.name}
-                  </Link>
-                )}
+                <Link className="nav-link" href={item.url}>{item.name}</Link>
               </React.Fragment>
             ))}
           </nav>

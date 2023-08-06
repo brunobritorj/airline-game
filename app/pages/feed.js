@@ -8,33 +8,43 @@ import DivListAssets from '../components/div/DivListAssets';
 
 // navbarSubItems temporary removed
 const navbarSubItems = [
-  { name: 'All', url: '/feed' },
-  { name: 'Mine', url: '/feed?mine' },
-  { name: 'Market', url: '/feed?market' },
+  { name: 'Todas', url: '/feed' },
+  { name: 'Minhas', url: '/feed?mine' },
+  { name: 'Concorrentes', url: '/feed?rival' },
+  { name: 'Outros', url: '/feed?other' },
 ]
 
 export default function PageNews() {
   const { data: session } = useSession();
   const router = useRouter();
-  const [newsData, setNewsData] = useState(null); // State to hold fetched data
+  const [newsData, setNewsData] = useState(); // State to hold fetched data
+  const [assetsData, setAssetsData] = useState([
+    {
+      icon: "/images/bank-color-icon.svg",
+      name: "Saldo bancário",
+      text: "Carregando ..."
+    },
+  ]); // State to hold fetched data, with default value of loading
 
   useEffect(() => {
+    // Test if user has a session
     if (!session) {
       router.push('/');
       return;
     }
 
-    const userName = sessionStorage.getItem('userName');
-    const userEmail = sessionStorage.getItem('userEmail');
-    const userAirline = sessionStorage.getItem('userAirline');
-    const userColor = sessionStorage.getItem('userColor');
-
-    if (!userName || !userEmail || !userAirline || !userColor) {
+    // Reading all user data from sessionStorage
+    const properties = ['_id', 'name', 'email', 'airline', 'color'];
+    const userData = {};
+    properties.forEach(property => {
+      userData[property] = sessionStorage.getItem(property);
+    });
+    if (!userData._id) {
       router.push('/');
       return;
     }
 
-    fetch(`/api/feed`)
+    fetch(`/api/feedpage?email=${session.user.email}`)
       .then(async response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -43,13 +53,17 @@ export default function PageNews() {
       })
       .then(data => {
         if (data) {
+          const assets = [
+            {
+              icon: "/images/bank-color-icon.svg",
+              name: "Saldo bancário",
+              text: `$ ${data.userData.assets.cash}`
+            },
+          ];
+          setAssetsData(assets); // Store fetched data in state
           const news = {
             title: "Notícias recentes",
-            items: data,
-            //bottom: {
-            //  "text": "Todas as notícias",
-            //  "link": "/"
-            //}
+            items: data.feedData
           };
           setNewsData(news); // Store fetched data in state
         }
@@ -57,25 +71,18 @@ export default function PageNews() {
       .catch(error => {
         console.error('Error:', error);
       });
+
   }, [session, router]);
 
   if (!session) {
     return <LayoutUnauthenticated />;
   }
-
-  const assets = [
-    {
-      icon: "/images/bank-color-icon.svg",
-      name: "Saldo bancário",
-      text: "$ 100.000.000,",
-    },
-  ];
-
+  
   return (
-    <BaseLayout subtitle="Feed" icon="/images/feed-color-icon.svg" color={sessionStorage.getItem('userColor')} description="Mantenha-se informado aqui">
+    <BaseLayout subtitle="Feed" navbarSubItems={navbarSubItems} icon="/images/feed-color-icon.svg" color={sessionStorage.getItem('color')} description="Mantenha-se informado aqui!">
       <p>Bem vindo, {session.user.name}!</p>
-      <DivListAssets assets={assets} />
-      {newsData && <DivListNews news={newsData} />} {/* Render only when newsData is available */}
+      {assetsData && <DivListAssets assets={assetsData} />} {/* Render only when newsData is available */}
+      {newsData && <DivListNews news={newsData} />}
     </BaseLayout>
   );
 }
