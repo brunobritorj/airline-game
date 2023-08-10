@@ -82,7 +82,7 @@ export default function AircraftDetails({ aircraft }) {
 
 export async function getServerSideProps(context) {
   // Fetch aircraft data using the id from a service or API
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/aircrafts/${context.query.id}`);
+  const response = await fetch(`${process.env.VERCEL_URL}/api/aircrafts/${context.query.id}`);
   const aircraft = await response.json();
 
   return {
