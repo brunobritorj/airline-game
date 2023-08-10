@@ -1,3 +1,6 @@
+// pages/aircrafts/[id].js
+
+import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
@@ -8,58 +11,79 @@ const navbarSubItems = [
   { name: 'Voltar', url: '/aircrafts' }
 ];
 
-export default function AircraftDetail() {
+export default function AircraftDetails({ aircraft }) {
+  const { data: session } = useSession();
   const router = useRouter();
-  const { id } = router.query;
+  if (!session) { return <LayoutUnauthenticated />; }
 
-  const [aircraft, setAircraft] = useState(null);
+  // Reading all user data from sessionStorage
+  const properties = ['_id', 'name', 'email', 'airline', 'color'];
+  const userData = {};
+  properties.forEach(property => {
+    userData[property] = sessionStorage.getItem(property);
+  });
+  if (!userData._id) {
+    router.push('/');
+    return;
+  }
 
-  useEffect(() => {
-    if (id) {
-      // Fetch aircraft data from GET /api/aircrafts/{id}
-      fetch(`/api/aircrafts/${id}`)
-        .then(response => response.json())
-        .then(data => {
-          setAircraft(data);
-        })
-        .catch(error => {
-          console.error('An error occurred while fetching data:', error);
-        });
-    }
-  }, [id]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    const data = { userId: userData._id };
+    const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Indicate JSON content
+      },
+      body: JSON.stringify(data),
+    });
 
-  const handleSubmit = () => {
-    if (aircraft) {
-      // Perform POST request to update aircraft data
-      fetch(`/api/aircrafts/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...aircraft, /* Updated data fields */ }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Redirect to the /aircrafts page
-          router.push('/aircrafts');
-        })
-        .catch(error => {
-          console.error('An error occurred while updating data:', error);
-        });
+    if (response.ok) {
+      router.replace(router.asPath);
+    } else {
+      console.error('Error purchasing aircraft');
     }
   };
 
   return (
-    <BaseLayout subtitle={`Aeronave ${id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color="#212529" description={"Detalhes"}>
+    <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color="#212529" description={"Detalhes"}>
       {aircraft ? (
-        <div>
-          <p>Modelo: {aircraft.model}</p>
-          <p>Preço: {moneyFormat(aircraft.price)}</p>
-          { aircraft.airline === null ? ( <button onClick={handleSubmit}>Comprar</button> ) : ("") }
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <fieldset disabled>
+              <label htmlFor="model" className="form-label">Modelo:</label><br />
+              <input className="form-control" type="text" id="model" name="model" value={aircraft.model} readOnly/><br />
+            </fieldset>
+            <fieldset disabled>
+              <label htmlFor="price" className="form-label">Preco:</label><br />
+              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)} readOnly/><br />
+            </fieldset>
+            { aircraft.airline === null ? (
+              <>
+                <input type="hidden" id="userId" name="userId" value={userData._id} />
+                <div className="d-grid gap-2">
+                  <button type="submit" className="btn btn-secondary">Comprar</button>
+                </div>
+              </>
+            ) : ("") }
+          </div>
+        </form>
       ) : (
         <p>Loading...</p>
       )}
     </BaseLayout>
   );
+}
+
+export async function getServerSideProps(context) {
+  // Fetch aircraft data using the id from a service or API
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/aircrafts/${context.query.id}`);
+  const aircraft = await response.json();
+
+  return {
+    props: {
+      aircraft,
+    },
+  };
 }
