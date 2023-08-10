@@ -9,7 +9,7 @@ export default function NewUser() {
   const router = useRouter();
 
   const [airline, setAirline] = useState('');
-  const [color, setColor] = useState('#000000');
+  const [color, setColor] = useState('#FF5733');
 
   const colorOptions = [
     { color: "#FF5733", alias: "Vermelho" },
