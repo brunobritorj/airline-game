@@ -30,7 +30,11 @@ export default function AircraftDetails({ aircraft }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    const data = { userId: userData._id };
+    const data = {
+      userId: userData._id,
+      model: aircraft.model,
+      price: aircraft.price
+    };
     const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
       method: 'POST',
       headers: {

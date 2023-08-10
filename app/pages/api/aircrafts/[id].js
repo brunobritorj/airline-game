@@ -1,6 +1,7 @@
 // /api/aircrafts/[id].js
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 import { ObjectId } from 'mongodb';
+import moneyFormat from '../../../utils/moneyFormat'
 
 export default async function apiAircraft(req, res) {
   try {
@@ -22,7 +23,7 @@ export default async function apiAircraft(req, res) {
       res.status(200).json(aircraft);
     } else if (method === 'POST') {
       const aircraftId = req.query.id;
-      const { userId } = req.body;
+      const { userId, model, price } = req.body;
 
       // Validate that userId is present in the request body
       if (!userId) {
@@ -39,6 +40,14 @@ export default async function apiAircraft(req, res) {
         { $set: { airline: new ObjectId(userId) } }, // Set the "airline" property to userId
         { returnOriginal: false } // Return the updated document
       );
+
+      // Post new msg on feed but doesn't care about the result
+      const newMsg = {
+        title: "Nova aeronave adquirida",
+        text: `${userId} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
+        airline: userId
+      };
+      await client.db(DB_NAME).collection('feed').insertOne(newMsg);
 
       // Close the database connection
       client.close();
