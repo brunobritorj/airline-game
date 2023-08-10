@@ -34,6 +34,8 @@ export default async function apiAircraft(req, res) {
       // Connect to the database
       await connectToDatabase();
 
+      // First, need to check if user has enough money!?
+
       // Update the document with the purchased aircraft
       const updatedAircraft = await client.db(DB_NAME).collection('aircrafts').findOneAndUpdate(
         { _id: new ObjectId(aircraftId) },
@@ -41,11 +43,18 @@ export default async function apiAircraft(req, res) {
         { returnOriginal: false } // Return the updated document
       );
 
+      // Update the document with the purchased aircraft and decrease assets.money by 10000
+      const updatedUser = await client.db(DB_NAME).collection('users').findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $inc: { 'assets.cash': -100000 } }, // Decrease assets.money by 10000
+        { returnOriginal: false } // Return the updated document
+      );
+
       // Post new msg on feed but doesn't care about the result
       const newMsg = {
         title: "Nova aeronave adquirida",
-        text: `${userId} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
-        airline: userId
+        text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
+        airline: updatedUser.value._id
       };
       await client.db(DB_NAME).collection('feed').insertOne(newMsg);
 
