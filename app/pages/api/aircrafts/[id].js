@@ -36,33 +36,47 @@ export default async function apiAircraft(req, res) {
 
       // First, need to check if user has enough money!?
 
-      // Update the document with the purchased aircraft
-      const updatedAircraft = await client.db(DB_NAME).collection('aircrafts').findOneAndUpdate(
-        { _id: new ObjectId(aircraftId) },
-        { $set: { airline: new ObjectId(userId) } }, // Set the "airline" property to userId
-        { returnOriginal: false } // Return the updated document
-      );
-
       // Update the document with the purchased aircraft and decrease assets.money by 10000
       const updatedUser = await client.db(DB_NAME).collection('users').findOneAndUpdate(
-        { _id: new ObjectId(userId) },
-        { $inc: { 'assets.cash': -100000 } }, // Decrease assets.money by 10000
+        {
+          "_id": new ObjectId(userId),
+          "assets.cash": { $gte: price } // Check if user has money
+        },
+        { $inc: { 'assets.cash': - price } }, // Payment
         { returnOriginal: false } // Return the updated document
       );
 
-      // Post new msg on feed but doesn't care about the result
-      const newMsg = {
-        title: "Nova aeronave adquirida",
-        text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
-        airline: updatedUser.value._id
-      };
-      await client.db(DB_NAME).collection('feed').insertOne(newMsg);
+      // If user had enought money to pay
+      if (updatedUser.value != null){
 
-      // Close the database connection
-      client.close();
+        // Transfer the aircraft ownership
+        const updatedAircraft = await client.db(DB_NAME).collection('aircrafts').findOneAndUpdate(
+          { _id: new ObjectId(aircraftId) },
+          { $set: { airline: new ObjectId(userId) } },
+          { returnOriginal: false }
+        );
 
-      // Return the updated aircraft data as JSON response
-      res.status(200).json(updatedAircraft.value);
+        if (updatedAircraft.value != null){
+
+          // Post new msg on feed but doesn't care about the result
+          const newMsg = {
+            title: "Nova aeronave adquirida",
+            text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
+            airline: updatedUser.value._id
+          };
+          await client.db(DB_NAME).collection('feed').insertOne(newMsg);
+          client.close();
+          res.status(200).json(updatedAircraft.value);
+        } else {
+          client.close();
+          res.status(400).json({error: 'Unable to transfer ownership'});
+        }
+
+      } else {
+        client.close();
+        res.status(400).json({error: 'Not enought money'});
+      }
+
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }

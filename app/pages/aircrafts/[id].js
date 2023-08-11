@@ -28,7 +28,7 @@ export default function AircraftDetails({ aircraft }) {
     router.push('/');
     return;
   }
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
   
