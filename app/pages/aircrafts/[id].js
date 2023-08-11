@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
 import moneyFormat from '../../utils/moneyFormat'
+import DivAlert from '../../components/div/DivAlert'
 
 const APP_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
 
@@ -16,6 +17,7 @@ const navbarSubItems = [
 export default function AircraftDetails({ aircraft }) {
   const { data: session } = useSession();
   const router = useRouter();
+  const [purchaseStatus, setPurchaseStatus] = useState(null);
   if (!session) { return <LayoutUnauthenticated />; }
 
   // Reading all user data from sessionStorage
@@ -46,9 +48,10 @@ export default function AircraftDetails({ aircraft }) {
     });
 
     if (response.ok) {
+      setPurchaseStatus("success");
       router.replace(router.asPath);
     } else {
-      console.error('Error purchasing aircraft');
+      setPurchaseStatus("warning");
     }
   };
 
@@ -56,6 +59,8 @@ export default function AircraftDetails({ aircraft }) {
     <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color="#212529" description={"Detalhes"}>
       {aircraft ? (
         <form onSubmit={handleSubmit}>
+          {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}
+          {purchaseStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Compra realizada"} /> )}
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="model" className="form-label">Modelo:</label><br />
