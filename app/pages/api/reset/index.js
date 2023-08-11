@@ -11,20 +11,32 @@ export default async function apiGame(req, res) {
 
       // Drop Collections
       try { await client.db(DB_NAME).collection('users').drop(); } catch (err) { console.error(`Error dropping collection users:`, err); }
-      try { await client.db(DB_NAME).collection('airports').drop(); } catch (err) { console.error(`Error dropping collection airports:`, err); }
-      try { await client.db(DB_NAME).collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
-      try { await client.db(DB_NAME).collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
+      //try { await client.db(DB_NAME).collection('airports').drop(); } catch (err) { console.error(`Error dropping collection airports:`, err); }
+      //try { await client.db(DB_NAME).collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
+      //try { await client.db(DB_NAME).collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
 
       // Push initial data
       const fs = require('fs');
+      
       // -> Airports
-      const airports = JSON.parse(fs.readFileSync(`${baseFolder}/airports.json`, 'utf8'));
-      await client.db(DB_NAME).collection('airports').insertMany(airports);
+      //const airports = JSON.parse(fs.readFileSync(`${baseFolder}/airports.json`, 'utf8'));      // Push new data
+      //await client.db(DB_NAME).collection('airports').insertMany(airports);                     // Push new data
+      await client.db(DB_NAME).collection('airports').updateMany({}, { $set: { airline: null } }) // Just reset owner (airline)
+
       // -> Aircrafts
-      const aircrafts = JSON.parse(fs.readFileSync(`${baseFolder}/aircrafts.json`, 'utf8'));
-      await client.db(DB_NAME).collection('aircrafts').insertMany(aircrafts);
+      //const aircrafts = JSON.parse(fs.readFileSync(`${baseFolder}/aircrafts.json`, 'utf8'));      // Push new data
+      //await client.db(DB_NAME).collection('aircrafts').insertMany(aircrafts);                     // Push new data
+      await client.db(DB_NAME).collection('aircrafts').updateMany({}, { $set: { airline: null } })  // Just reset owner (airline)
+      
       // -> Feed
-      const feed = JSON.parse(fs.readFileSync(`${baseFolder}/feed.json`, 'utf8'));
+      const feed = [
+        {
+          "title": "Nova partida foi iniciada",
+          "text": "Faca sua companhia aérea crescer, adquira novos hubs, aeronaves, e abra novas rotas.",
+          "airline": null
+        }
+      ]
+      
       await client.db(DB_NAME).collection('feed').insertMany(feed);
 
       // Close the database connection
