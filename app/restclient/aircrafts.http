@@ -9,11 +9,11 @@ GET {{endpoint}}/api/aircrafts?airline=none HTTP/1.1
 content-type: application/json
 
 ### GET /api/aircrafts (mine)
-GET {{endpoint}}/api/aircrafts?airline=64cfa7977963982ddff21349 HTTP/1.1
+GET {{endpoint}}/api/aircrafts?airline=5b5edb8078200e322c5667f2 HTTP/1.1
 content-type: application/json
 
 ### GET /api/aircrafts (other airlines)
-GET {{endpoint}}/api/aircrafts?airline=!64cfa7977963982ddff21349 HTTP/1.1
+GET {{endpoint}}/api/aircrafts?airline=!5b5edb8078200e322c5667f2 HTTP/1.1
 content-type: application/json
 
 ### GET /api/aircrafts/{id}

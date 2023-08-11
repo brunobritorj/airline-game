@@ -8,7 +8,6 @@ export default function Home() {
   if (!session) {
     return <LayoutUnauthenticated />;
   } else {
-    console.log(session.user);
     fetch(`/api/users?email=${session.user.email}`)
       .then(async response => {
         if (response.status === 404) {

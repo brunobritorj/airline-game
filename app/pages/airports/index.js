@@ -1,9 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
-import BaseLayout from '../components/BaseLayout';
-import DivListItems from '../components/div/DivListItems';
+import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
+import BaseLayout from '../../components/BaseLayout';
+import DivListItems from '../../components/div/DivListItems';
 
 const navbarSubItems = [
   { name: 'Todos', url: '/airports' },

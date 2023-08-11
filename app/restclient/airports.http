@@ -1,0 +1,29 @@
+@endpoint = http://localhost:3000
+
+### GET /api/airports
+GET {{endpoint}}/api/airports HTTP/1.1
+content-type: application/json
+
+### GET /api/airports (on sale)
+GET {{endpoint}}/api/airports?airline=none HTTP/1.1
+content-type: application/json
+
+### GET /api/airports (mine)
+GET {{endpoint}}/api/airports?airline=5b5edb8078200e322c5667f2 HTTP/1.1
+content-type: application/json
+
+### GET /api/airports (other airlines)
+GET {{endpoint}}/api/airports?airline=!5b5edb8078200e322c5667f2 HTTP/1.1
+content-type: application/json
+
+### GET /api/airports/{id}
+GET {{endpoint}}/api/airports/64d6778e97bc80ae7ad5a170 HTTP/1.1
+content-type: application/json
+
+### POST /api/airports/{id}/{userId}
+POST {{endpoint}}/api/airports/64d513e5a749f7514f1557b5 HTTP/1.1
+content-type: application/json
+
+{
+  "userId": "64d51498a749f7514f1557b7"
+}

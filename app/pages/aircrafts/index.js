@@ -58,17 +58,3 @@ export default function PageNews() {
     </BaseLayout>
   );
 }
-
-/*
-### GET /api/aircrafts (on sale)
-GET {{endpoint}}/api/aircrafts?airline=none HTTP/1.1
-content-type: application/json
-
-### GET /api/aircrafts (mine)
-GET {{endpoint}}/api/aircrafts?airline=64cfa7977963982ddff21349 HTTP/1.1
-content-type: application/json
-
-### GET /api/aircrafts (other airlines)
-GET {{endpoint}}/api/aircrafts?airline=!64cfa7977963982ddff21349 HTTP/1.1
-content-type: application/json
-*/
