@@ -23,7 +23,7 @@ export default async function apiAirport(req, res) {
       res.status(200).json(airport);
     } else if (method === 'POST') {
       const airportId = req.query.id;
-      const { userId, model, price } = req.body;
+      const { userId, iata, price } = req.body;
 
       // Validate that userId is present in the request body
       if (!userId) {
@@ -58,8 +58,8 @@ export default async function apiAirport(req, res) {
 
           // Post new msg on feed but doesn't care about the result
           const newMsg = {
-            title: "Nova aeronave adquirida",
-            text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
+            title: "Novo hub licenciado",
+            text: `${updatedUser.value.airline} adquiriu exclusividade de uso como hub no ${updatedAirport.value.iata} | ${updatedAirport.value.airport} (${updatedAirport.value.state} - ${updatedAirport.value.country}) por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
           await client.db(DB_NAME).collection('feed').insertOne(newMsg);

@@ -7,7 +7,8 @@
     "country": "USA",
     "lat": 41.979595,
     "lon": -87.904464,
-    "price": 250000000
+    "price": 250000000,
+    "airline": null
   },
   {
     "iata": "DFW",
@@ -17,7 +18,8 @@
     "country": "USA",
     "lat": 32.89595056,
     "lon": -97.0372,
-    "price": 250000000
+    "price": 250000000,
+    "airline": null
   },
   {
     "iata": "JFK",
@@ -27,6 +29,7 @@
     "country": "USA",
     "lat": 40.63975111,
     "lon": -73.77892556,
-    "price": 300000000
+    "price": 300000000,
+    "airline": null
   }
 ]

@@ -1,4 +1,4 @@
-// pages/aircrafts/[id].js
+// pages/airports/[id].js
 
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
@@ -11,10 +11,10 @@ import DivAlert from '../../components/div/DivAlert'
 const APP_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
 
 const navbarSubItems = [
-  { name: 'Voltar', url: '/aircrafts' }
+  { name: 'Voltar', url: '/airports' }
 ];
 
-export default function AircraftDetails({ aircraft }) {
+export default function AirportDetails({ airport }) {
   const { data: session } = useSession();
   const router = useRouter();
   const [purchaseStatus, setPurchaseStatus] = useState(null);
@@ -36,10 +36,10 @@ export default function AircraftDetails({ aircraft }) {
   
     const data = {
       userId: userData._id,
-      model: aircraft.model,
-      price: aircraft.price
+      model: airport.model,
+      price: airport.price
     };
-    const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
+    const response = await fetch(`/api/airports/${airport._id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Indicate JSON content
@@ -56,21 +56,17 @@ export default function AircraftDetails({ aircraft }) {
   };
 
   return (
-    <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color="#212529" description={"Detalhes"}>
-      {aircraft ? (
+    <BaseLayout subtitle={`${airport.iata} | ${airport.airport}`} navbarSubItems={navbarSubItems} icon="/images/airports-color-icon.svg" color="#212529" description={`${airport.city}, ${airport.state} - ${airport.country}`}>
+      {airport ? (
         <form onSubmit={handleSubmit}>
           {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}
           {purchaseStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Compra realizada"} /> )}
           <div className="mb-3">
             <fieldset disabled>
-              <label htmlFor="model" className="form-label">Modelo:</label><br />
-              <input className="form-control" type="text" id="model" name="model" value={aircraft.model} readOnly/><br />
-            </fieldset>
-            <fieldset disabled>
               <label htmlFor="price" className="form-label">Preço:</label><br />
-              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)} readOnly/><br />
+              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(airport.price)} readOnly/><br />
             </fieldset>
-            { aircraft.airline === null ? (
+            { airport.airline === null ? (
               <>
                 <input type="hidden" id="userId" name="userId" value={userData._id} />
                 <div className="d-grid gap-2">
@@ -88,13 +84,13 @@ export default function AircraftDetails({ aircraft }) {
 }
 
 export async function getServerSideProps(context) {
-  // Fetch aircraft data using the id from a service or API
-  const response = await fetch(`${APP_URL}/api/aircrafts/${context.query.id}`);
-  const aircraft = await response.json();
+  // Fetch airport data using the id from a service or API
+  const response = await fetch(`${APP_URL}/api/airports/${context.query.id}`);
+  const airport = await response.json();
 
   return {
     props: {
-      aircraft,
+      airport,
     },
   };
 }
