@@ -1,4 +1,6 @@
 import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
+import { ObjectId } from 'mongodb';
+import hashObjectId from '../../../utils/hashObjectId';
 
 // -> /api/users
 export default async function apiUsers(req, res) {
@@ -35,8 +37,9 @@ export default async function apiUsers(req, res) {
       // Handle user creation here
       try {
         const { email, name, airline = name, color = '#000000' } = req.body;
+        const _id = hashObjectId(email); // Generate a fixed ObjectId based on the email address
         const assets = {
-          "cash": 100000000
+          "cash": 1000000000 // $1B
         };
 
         if (!email || !name) {
@@ -55,7 +58,7 @@ export default async function apiUsers(req, res) {
         }
 
         // Create the new user
-        const newUser = { email, name, airline, color, assets };
+        const newUser = { _id, email, name, airline, color, assets };
         const result = await client.db(DB_NAME).collection('users').insertOne(newUser);
       
         if (!result || !result.insertedId) {

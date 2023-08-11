@@ -48,8 +48,6 @@ export default function NewUser() {
         throw new Error('Error creating user');
       }
 
-      console.log('User created successfully');
-
       // Save user data to sessionStorage
       Object.entries(userData).forEach(([key, value]) => {
         if (typeof value != 'object' && value !== null) {

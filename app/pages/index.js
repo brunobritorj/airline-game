@@ -5,10 +5,10 @@ import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
 export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
-
   if (!session) {
     return <LayoutUnauthenticated />;
   } else {
+    console.log(session.user);
     fetch(`/api/users?email=${session.user.email}`)
       .then(async response => {
         if (response.status === 404) {
