@@ -7,6 +7,8 @@ import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
 import moneyFormat from '../../utils/moneyFormat'
 
+const APP_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+
 const navbarSubItems = [
   { name: 'Voltar', url: '/aircrafts' }
 ];
@@ -82,7 +84,7 @@ export default function AircraftDetails({ aircraft }) {
 
 export async function getServerSideProps(context) {
   // Fetch aircraft data using the id from a service or API
-  const response = await fetch(`${process.env.VERCEL_URL}/api/aircrafts/${context.query.id}`);
+  const response = await fetch(`${APP_URL}/api/aircrafts/${context.query.id}`);
   const aircraft = await response.json();
 
   return {
