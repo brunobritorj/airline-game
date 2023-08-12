@@ -29,7 +29,6 @@ export default function PageRoutes() {
 
   return (
     <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui!" navbarSubItems={navbarSubItems}>
-      Nova rota!
       <DivNewRouteForm airline_id={userData._id} />
     </BaseLayout>
   );
