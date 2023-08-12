@@ -53,7 +53,7 @@ export default function PageNews() {
   }
   
   return (
-    <BaseLayout subtitle="Aeroportos" color={sessionStorage.getItem('color')} icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Aeroportos" color={sessionStorage.getItem('color')} icon="/images/airports-color-icon.svg" description="Gerencie aeroportos aqui!" navbarSubItems={navbarSubItems}>
       {airportsData && <DivListAirports airports={airportsData} />} {/* Render only when airportsData is available */}
     </BaseLayout>
   );

@@ -56,7 +56,7 @@ export default function AircraftDetails({ aircraft }) {
   };
 
   return (
-    <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color="#212529" description={"Detalhes"}>
+    <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={aircraft.color} description={"Detalhes"}>
       {aircraft ? (
         <form onSubmit={handleSubmit}>
           {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}

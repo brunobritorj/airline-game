@@ -83,7 +83,7 @@ export default function PageNews() {
   
   return (
     <BaseLayout subtitle="Feed" navbarSubItems={navbarSubItems} icon="/images/feed-color-icon.svg" color={sessionStorage.getItem('color')} description="Mantenha-se informado aqui!">
-      <p>Bem vindo, {session.user.name}!</p>
+      <p>Bem vindo, {session.user.name.split(" ")[0]}!</p>
       {assetsData && <DivListAssets assets={assetsData} />} {/* Render only when newsData is available */}
       {newsData && <DivListNews news={newsData} />}
     </BaseLayout>

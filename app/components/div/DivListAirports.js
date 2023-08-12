@@ -11,27 +11,18 @@ export default function DivListAirports({ airports }) {
               <title>{item.iata}</title><rect width="100%" height="100%" fill={item.color}></rect><text x="50%" y="50%" fill={item.color} dy=".3em"></text>
             </svg>
             <div className="pb-3 mb-0 small lh-sm border-bottom w-100">
-            {item.airline ? (
-              <>
-                <div className="d-flex justify-content-between">
-                  <strong className="text-gray-dark">{item.iata} | {item.city} - {item.country}</strong>
-                </div>
-                <span className="d-block">{item.airline}</span>
-              </>
-            ):(
-              <>
-                <div className="d-flex justify-content-between">
-                  <strong className="text-gray-dark">{item.iata} | {item.city} - {item.country}</strong>
-                  <Link href={`/airports/${item._id}`}>Visitar</Link>
-                </div>
-                <span className="d-block">{moneyFormat(item.price)}</span>
-              </>
-            )}
+              <div className="d-flex justify-content-between">
+                <strong className="text-gray-dark">{item.iata} | {item.city} - {item.country}</strong>
+                <Link href={`/airports/${item._id}`}>Visitar</Link>
+              </div>
+              <span className="d-block">
+                {item.airline ? (`${item.airline}`):(moneyFormat(item.price))}
+              </span>
             </div>
           </div>
         ))
       ) : (
-        <p>Loading...</p>
+        <p>Carregando...</p>
       )}
     </div>
   );

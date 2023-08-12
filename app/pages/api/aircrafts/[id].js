@@ -13,14 +13,41 @@ export default async function apiAircraft(req, res) {
       // Connect to the database
       await connectToDatabase();
 
+      let query = { _id: new ObjectId(aircraftId) }
+      const queryPipeline = [
+        {
+          $match: query,
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "airline",
+            foreignField: "_id",
+            as: "airlineInfo"
+          }
+        },
+        {
+          $unwind: { path: "$airlineInfo", preserveNullAndEmptyArrays: true },
+        },
+        {
+          $project: {
+            _id: 1,
+            model: 1,
+            price: 1,
+            airline: { $ifNull: ["$airlineInfo.airline", null] },
+            color: { $ifNull: ["$airlineInfo.color", "#212529"] },
+          }
+        }
+      ];
+
       // Perform the query
-      const aircraft = await client.db(DB_NAME).collection('aircrafts').findOne({ _id: new ObjectId(aircraftId) });
+      const aircraftResult = await client.db(DB_NAME).collection('aircrafts').aggregate(queryPipeline).toArray();
 
       // Close the database connection
       client.close();
 
       // Return the data as JSON response
-      res.status(200).json(aircraft);
+      res.status(200).json(aircraftResult[0]);
     } else if (method === 'POST') {
       const aircraftId = req.query.id;
       const { userId, model, price } = req.body;

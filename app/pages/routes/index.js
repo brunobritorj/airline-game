@@ -1,8 +1,8 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
-import BaseLayout from '../components/BaseLayout';
-import DivListItems from '../components/div/DivListItems';
+import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
+import BaseLayout from '../../components/BaseLayout';
+import DivListItems from '../../components/div/DivListItems';
 
 const navbarSubItems = [
   { name: 'All', url: '/routes' },
@@ -54,7 +54,7 @@ export default function pageRoutes() {
   }
 
   return (
-    <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui" navbarSubItems={navbarSubItems}>
+    <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui!" navbarSubItems={navbarSubItems}>
       <DivListItems genericItems={genericItems}/>
     </BaseLayout>
   );

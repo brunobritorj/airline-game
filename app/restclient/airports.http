@@ -17,7 +17,7 @@ GET {{endpoint}}/api/airports?airline=!5b5edb8078200e322c5667f2 HTTP/1.1
 content-type: application/json
 
 ### GET /api/airports/{id}
-GET {{endpoint}}/api/airports/64d6778e97bc80ae7ad5a170 HTTP/1.1
+GET {{endpoint}}/api/airports/64d68baad23c542c20c79ab8 HTTP/1.1
 content-type: application/json
 
 ### POST /api/airports/{id}/{userId}
