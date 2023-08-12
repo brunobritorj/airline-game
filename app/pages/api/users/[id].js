@@ -1,29 +1,42 @@
 import { ObjectId } from 'mongodb';
-import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
+import database from '../../../utils/dbConnection';
 
-// GET /api/user/{id}
 export async function apiUserById(req, res) {
+
+  await database.connect();
+  const userId = req.query.id;
+
   try {
-    
-    await connectToDatabase();
-    const collection = client.db(DB_NAME).collection('users');
-    const userId = req.query.id;
 
-    try {
-      const user = await collection.findOne({ _id: new ObjectId(userId) });
+    // -> GET /api/users/{id}
+    if (req.method === 'GET') {
 
-      if (!user) {
-        res.status(404).json({ error: 'User not found' });
+      // Convert userId (String -> ObjectId)
+      try {
+        const _id = new ObjectId(userId)
+      } catch (error) {
+        console.error('Error converting ObjectId:', error);
+        res.status(400).json({ error: 'Invalid user ID' });
         return;
       }
 
-      client.close();
+      // Search for the user in DB
+      try {
+        const user = await database.db.collection('users').findOne({ "_id": _id });
+        if (!user) {
+          res.status(404).json({ error: 'User not found' });
+          return;
+        } else {
+          res.status(200).json(user);
+        }
+      } catch (error) {
+        console.error('Error when performing DB query:', error);
+        res.status(500).json({ error: 'Invalid user ID' });
+        return;
+      }
 
-      res.status(200).json(user);
-    } catch (error) {
-      // Handle error if ObjectId conversion fails
-      console.error('Error converting ObjectId:', error);
-      res.status(400).json({ error: 'Invalid user ID' });
+    } else {
+      res.status(405).json({ error: 'Method not allowed' });
     }
   } catch (error) {
     console.error('API route error:', error);

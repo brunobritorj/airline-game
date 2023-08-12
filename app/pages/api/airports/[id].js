@@ -1,17 +1,16 @@
-// /api/airports/[id].js
-import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 import { ObjectId } from 'mongodb';
+import database from '../../../utils/dbConnection';
 import moneyFormat from '../../../utils/moneyFormat'
 
-export default async function apiAirport(req, res) {
+export default async function apiAirportById(req, res) {
+
+  await database.connect();
+  const airportId = req.query.id;
+
   try {
-    const { method } = req;
 
-    if (method === 'GET') {
-      const airportId = req.query.id;
-
-      // Connect to the database
-      await connectToDatabase();
+    // -> GET /airports/{id}
+    if (req.method === 'GET') {
 
       let query = { _id: new ObjectId(airportId) }
       const queryPipeline = [
@@ -47,28 +46,24 @@ export default async function apiAirport(req, res) {
       ];
 
       // Perform the query
-      const airportResult = await client.db(DB_NAME).collection('airports').aggregate(queryPipeline).toArray();
-
-      // Close the database connection
-      client.close();
+      const airportResult = await database.db.collection('airports').aggregate(queryPipeline).toArray();
 
       // Return the data as JSON response
       res.status(200).json(airportResult[0]);
-    } else if (method === 'POST') {
-      const airportId = req.query.id;
-      const { userId, iata, price } = req.body;
+    }
+    
+    // -> POST /airports/{id}
+    else if (req.method === 'POST') {
 
-      // Validate that userId is present in the request body
+      // Get data from body
+      const { userId, iata, price } = req.body;
       if (!userId) {
         res.status(400).json({ error: 'Missing userId in request body' });
         return;
       }
 
-      // Connect to the database
-      await connectToDatabase();
-
       // Update the document decreasing assets.money
-      const updatedUser = await client.db(DB_NAME).collection('users').findOneAndUpdate(
+      const updatedUser = await database.db.collection('users').findOneAndUpdate(
         {
           "_id": new ObjectId(userId),
           "assets.cash": { $gte: price } // Check if user has money
@@ -81,7 +76,7 @@ export default async function apiAirport(req, res) {
       if (updatedUser.value != null){
 
         // Transfer the airport ownership
-        const updatedAirport = await client.db(DB_NAME).collection('airports').findOneAndUpdate(
+        const updatedAirport = await database.db.collection('airports').findOneAndUpdate(
           { _id: new ObjectId(airportId) },
           { $set: { airline: new ObjectId(userId) } },
           { returnOriginal: false }
@@ -89,30 +84,34 @@ export default async function apiAirport(req, res) {
 
         if (updatedAirport.value != null){
 
-          // Post new msg on feed but doesn't care about the result
+          // Post new msg on feed (doesn't care about the result)
           const newMsg = {
             title: "Novo hub licenciado",
             text: `${updatedUser.value.airline} adquiriu exclusividade de uso do ${updatedAirport.value.iata} | ${updatedAirport.value.airport} (${updatedAirport.value.state} - ${updatedAirport.value.country}) como seu hub, por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
-          await client.db(DB_NAME).collection('feed').insertOne(newMsg);
-          client.close();
+          
+          await database.db.collection('feed').insertOne(newMsg);
           res.status(200).json(updatedAirport.value);
+          return;
+
         } else {
-          client.close();
           res.status(400).json({error: 'Unable to transfer ownership'});
+          return;
         }
 
       } else {
-        client.close();
         res.status(400).json({error: 'Not enought money'});
+        return;
       }
 
     } else {
       res.status(405).json({ error: 'Method not allowed' });
+      return;
     }
   } catch (error) {
     console.error('API route error:', error);
     res.status(500).json({ error: 'Internal server error' });
+    return;
   }
 }

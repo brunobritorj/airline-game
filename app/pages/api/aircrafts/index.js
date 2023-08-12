@@ -1,14 +1,18 @@
-import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 import { ObjectId } from 'mongodb';
+import database from '../../../utils/dbConnection';
 
-// -> /api/feed
 export default async function apiAircrafts(req, res) {
+
+  await database.connect();
+
   try {
+
+    // -> GET /api/aircrafts
     if (req.method === 'GET') {
 
-      const { airline } = req.query;
-
+      // Build the query based on user inputs
       let query = {};
+      const { airline } = req.query;
       if (airline) {
         if (airline === 'none') {
           query.airline = null;
@@ -20,6 +24,7 @@ export default async function apiAircrafts(req, res) {
         }
       }
 
+      // Build the pipeline to pull/convert relationships
       const queryPipeline = [
         {
           $match: query,
@@ -52,23 +57,13 @@ export default async function apiAircrafts(req, res) {
         }
       ];
 
-      // Connect to the database
-      await connectToDatabase();
-
       // Perform the query
       let data;
-      data = await client.db(DB_NAME).collection('aircrafts').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      data = await database.db.collection('aircrafts').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
       
-      // Close the database connection
-      client.close();
-
       // Return the data as JSON response
       res.status(200).json(data);
       
-    } else if (req.method === 'POST') {
-
-      res.status(405).json({ error: 'Method not allowed' });
-
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }
@@ -77,4 +72,3 @@ export default async function apiAircrafts(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-

@@ -1,23 +1,27 @@
 import { useState, useEffect } from 'react';
 
+const APP_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+
 export default function NewRouteForm({airline_id}){
   const [airports, setAirports] = useState();
   const [aircrafts, setAircrafts] = useState();
-  const [airportRemote, setAirportRemote] = useState();
+  const [airportDestination, setAirportDestination] = useState();
   const [selectedAirportHub, setSelectedAirportHub] = useState();
   const [selectedAircraft, setSelectedAircraft] = useState();
 
   useEffect(() => {
     // Fetch airports based on airline_id
-    fetch(`/api/airports?airline=${airline_id}`)
+    fetch(`${APP_URL}/api/airports?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAirports(data));
 
     // Fetch aircrafts based on airline_id and route=none
-    fetch(`/api/aircrafts?airline=${airline_id}&route=none`)
+  fetch(`${APP_URL}/api/aircrafts?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAircrafts(data));
   }, []);
+
+  console.log(aircrafts);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +31,7 @@ export default function NewRouteForm({airline_id}){
       body: JSON.stringify({
         airportHub: selectedAirportHub,
         aircraft: selectedAircraft,
-        airportRemote: airportRemote,
+        airportDestination: airportDestination,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -45,12 +49,28 @@ export default function NewRouteForm({airline_id}){
   return (
     <form onSubmit={handleSubmit}>
 
+      { airports &&
+        <label>
+          Hub de origem: 
+          <select
+            value={selectedAirportHub}
+            onChange={(e) => setSelectedAirportHub(e.target.value)}
+          >
+            {airports.map((airport, index) => (
+              <option key={airport._id} value={airport._id}>
+                {airport.iata}
+              </option>
+            ))}
+          </select>
+        </label>
+      }
+      <br />
       <label>
-        Airport Remote:
+        Destino:
         <input
           type="text"
-          value={airportRemote}
-          onChange={(e) => setAirportRemote(e.target.value)}
+          value={airportDestination}
+          onChange={(e) => setAirportDestination(e.target.value)}
         />
       </label>
       <br />

@@ -1,17 +1,16 @@
-// /api/aircrafts/[id].js
-import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
 import { ObjectId } from 'mongodb';
+import database from '../../../utils/dbConnection';
 import moneyFormat from '../../../utils/moneyFormat'
 
-export default async function apiAircraft(req, res) {
+export default async function apiAircraftById(req, res) {
+
+  await database.connect();
+  const aircraftId = req.query.id;
+
   try {
-    const { method } = req;
 
-    if (method === 'GET') {
-      const aircraftId = req.query.id;
-
-      // Connect to the database
-      await connectToDatabase();
+    // -> GET /aircrafts/{id}
+    if (req.method === 'GET') {
 
       let query = { _id: new ObjectId(aircraftId) }
       const queryPipeline = [
@@ -41,29 +40,25 @@ export default async function apiAircraft(req, res) {
       ];
 
       // Perform the query
-      const aircraftResult = await client.db(DB_NAME).collection('aircrafts').aggregate(queryPipeline).toArray();
-
-      // Close the database connection
-      client.close();
+      const aircraftResult = await database.db.collection('aircrafts').aggregate(queryPipeline).toArray();
 
       // Return the data as JSON response
       res.status(200).json(aircraftResult[0]);
-    } else if (method === 'POST') {
-      const aircraftId = req.query.id;
-      const { userId, model, price } = req.body;
 
-      // Validate that userId is present in the request body
+    }
+
+    // -> POST /aircrafts/{id}
+    else if (req.method === 'POST') {
+
+      // Get data from body
+      const { userId, model, price } = req.body;
       if (!userId) {
         res.status(400).json({ error: 'Missing userId in request body' });
         return;
       }
 
-      // Connect to the database
-      await connectToDatabase();
-
-
       // Update the document decreasing assets.money
-      const updatedUser = await client.db(DB_NAME).collection('users').findOneAndUpdate(
+      const updatedUser = await database.db.collection('users').findOneAndUpdate(
         {
           "_id": new ObjectId(userId),
           "assets.cash": { $gte: price } // Check if user has money
@@ -76,7 +71,7 @@ export default async function apiAircraft(req, res) {
       if (updatedUser.value != null){
 
         // Transfer the aircraft ownership
-        const updatedAircraft = await client.db(DB_NAME).collection('aircrafts').findOneAndUpdate(
+        const updatedAircraft = await database.db.collection('aircrafts').findOneAndUpdate(
           { _id: new ObjectId(aircraftId) },
           { $set: { airline: new ObjectId(userId) } },
           { returnOriginal: false }
@@ -84,30 +79,34 @@ export default async function apiAircraft(req, res) {
 
         if (updatedAircraft.value != null){
 
-          // Post new msg on feed but doesn't care about the result
+          // Post new msg on feed (doesn't care about the result)
           const newMsg = {
             title: "Nova aeronave adquirida",
             text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
-          await client.db(DB_NAME).collection('feed').insertOne(newMsg);
-          client.close();
+          
+          await database.db.collection('feed').insertOne(newMsg);
           res.status(200).json(updatedAircraft.value);
+          return;
+
         } else {
-          client.close();
           res.status(400).json({error: 'Unable to transfer ownership'});
+          return;
         }
 
       } else {
-        client.close();
         res.status(400).json({error: 'Not enought money'});
+        return;
       }
 
     } else {
       res.status(405).json({ error: 'Method not allowed' });
+      return;
     }
   } catch (error) {
     console.error('API route error:', error);
     res.status(500).json({ error: 'Internal server error' });
+    return;
   }
 }
