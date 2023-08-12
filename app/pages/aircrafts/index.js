@@ -12,7 +12,7 @@ const navbarSubItems = [
   { name: 'Loja', url: '/aircrafts?filter=sale' },
 ];
 
-export default function PageNews() {
+export default function PageAircrafts() {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -51,7 +51,7 @@ export default function PageNews() {
   if (!session) {
     return <LayoutUnauthenticated />;
   }
-  
+
   return (
     <BaseLayout subtitle="Aeronaves" navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={sessionStorage.getItem('color')} description="Gerencie as aeronaves aqui!">
       {aircraftsData && <DivListAircrafts aircrafts={aircraftsData} />} {/* Render only when aircraftsData is available */}

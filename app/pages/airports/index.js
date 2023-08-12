@@ -12,7 +12,7 @@ const navbarSubItems = [
   { name: 'Hubs disponiveis', url: '/airports?filter=sale' },
 ];
 
-export default function PageNews() {
+export default function PageAirports() {
   const { data: session } = useSession();
   const router = useRouter();
 

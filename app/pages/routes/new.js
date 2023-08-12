@@ -2,7 +2,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
-import DivListItems from '../../components/div/DivListItems';
+import DivNewRouteForm from '../../components/div/DivNewRouteForm';
 
 const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
@@ -26,36 +26,11 @@ export default function PageRoutes() {
     router.push('/');
     return;
   }
-  
-  const genericItems = {
-    title: "Recent updates",
-    items: [
-      {
-        color: "blue",
-        name: "Aircraft A",
-        text: "$100",
-        link: {
-          name: "Buy",
-          url: "/post/1"
-        }
-      },
-      {
-        color: "red",
-        name: "Aircraft B",
-        text: "$300",
-        link: {
-          name: "Sell",
-          url: "/post/2"
-        }
-      }
-    ],
-    bottomText: "All",
-    bottonLink: "/"
-  }
 
   return (
     <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui!" navbarSubItems={navbarSubItems}>
-      {genericItems && <DivListItems genericItems={genericItems}/>} {/* Render only when genericItems is available */}
+      Nova rota!
+      <DivNewRouteForm airline_id={userData._id} />
     </BaseLayout>
   );
 
