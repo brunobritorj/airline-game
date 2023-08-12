@@ -1,24 +1,13 @@
 import database from '../../../utils/dbConnection';
 
-export default async function apiFeedPage(req, res) {
+export default async function apiNews(req, res) {
 
   await database.connect();
 
   try {
 
-    // -> GET /api/feedpage
+    // -> GET /api/news
     if (req.method === 'GET') {
-
-      // Check user inputs
-      const { email } = req.query;
-      if (!email) {
-        res.status(400).json({ error: 'Email is a required field' });
-        return;
-      }
-
-      // Query user's data
-      let userData;
-      userData = await database.db.collection('users').findOne({ email });
 
       // Query news
       const queryPipeline = [
@@ -49,11 +38,11 @@ export default async function apiFeedPage(req, res) {
           $limit: 10, // Limit the results to 10 documents
         }
       ];
-      let feedData;
-      feedData = await database.db.collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      let data;
+      data = await database.db.collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
       
       // Return the data as JSON response
-      res.status(200).json({userData, feedData});
+      res.status(200).json(data);
       return;
 
     }

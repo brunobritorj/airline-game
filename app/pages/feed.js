@@ -47,7 +47,7 @@ export default function PageNews() {
       return;
     }
     else {
-      fetch(`/api/feedpage?email=${session.user.email}`)
+      fetch(`/api/feed?email=${session.user.email}`)
         .then(async response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');

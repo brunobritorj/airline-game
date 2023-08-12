@@ -1,10 +1,26 @@
-import { connectToDatabase, client, DB_NAME } from '../../../utils/mongodb';
+import database from '../../../utils/dbConnection';
 
-// -> /api/feed
 export default async function apiFeed(req, res) {
+
+  await database.connect();
+
   try {
+
+    // -> GET /api/feed
     if (req.method === 'GET') {
 
+      // Check user inputs
+      const { email } = req.query;
+      if (!email) {
+        res.status(400).json({ error: 'Email is a required field' });
+        return;
+      }
+
+      // Query user's data
+      let userData;
+      userData = await database.db.collection('users').findOne({ email });
+
+      // Query news
       const queryPipeline = [
         {
           $lookup: {
@@ -33,58 +49,22 @@ export default async function apiFeed(req, res) {
           $limit: 10, // Limit the results to 10 documents
         }
       ];
-
-      // Connect to the database
-      await connectToDatabase();
-
-      // Perform the query
-      let data;
-      data = await client.db(DB_NAME).collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      let feedData;
+      feedData = await database.db.collection('feed').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
       
-      // Close the database connection
-      client.close();
-
       // Return the data as JSON response
-      res.status(200).json(data);
-      
-    } else if (req.method === 'POST') {
+      res.status(200).json({userData, feedData});
+      return;
 
-      try {
-        const { category, title, text, airline } = req.body;
-
-        if (!category || !title || !text || !airline) {
-          res.status(400).json({ error: 'Missing required fields' });
-          return;
-        }
-
-        // Connect to the database
-        await connectToDatabase();
-
-        // Access a collection
-        const collection = client.db(DB_NAME).collection('users');
-
-        // Create the new msg on Feed
-        const newMsg = { email, name, airline, color, assets };
-        const result = await collection.insertOne(newMsg);
-      
-        if (!result || !result.insertedId) {
-          throw new Error('Msg post failed');
-        }
-      
-        // Close the database connection
-        client.close();
-      
-        res.status(201).json(result.insertedId);
-      } catch (error) {
-        console.error('Error posting a message on feed:', error);
-        res.status(500).json({ error: 'Error posting a message on feed' });
-      }
-    } else {
+    }
+    else {
       res.status(405).json({ error: 'Method not allowed' });
+      return;
     }
   } catch (error) {
     console.error('API route error:', error);
     res.status(500).json({ error: 'Internal server error' });
+    return;
   }
 }
 

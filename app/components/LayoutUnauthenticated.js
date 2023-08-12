@@ -34,11 +34,11 @@ export default function LayoutUnauthenticated({ title = 'Airline Game | Login' }
       `}</style>
       <div className="text-center">
         <img className="mb-4" src="/images/favicon.svg" alt="" width="100" height="100" />
-        <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <h1 className="h3 mb-3 font-weight-normal">Inicie sessão</h1>
         <button onClick={() => signIn('azure-ad')} className="btn btn-lg btn-secondary btn-block">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-microsoft" viewBox="0 0 16 16">
             <path d="M7.462 0H0v7.19h7.462V0zM16 0H8.538v7.19H16V0zM7.462 8.211H0V16h7.462V8.211zm8.538 0H8.538V16H16V8.211z"></path>
-          </svg> Login
+          </svg> Entrar
         </button>
         <p className="mt-5 mb-3 text-muted">2023 @ Airline Game</p>
       </div>
