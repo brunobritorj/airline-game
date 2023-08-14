@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 
-const APP_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
-
 export default function NewRouteForm({airline_id}){
   const [airportsSrc, setAirportsSrc] = useState();
   const [airportsDst, setAirportsDst] = useState();
@@ -13,17 +11,17 @@ export default function NewRouteForm({airline_id}){
   useEffect(() => {
 
     // Fetch airports based on airline_id
-    fetch(`${APP_URL}/api/airports?airline=${airline_id}`)
+    fetch(`/api/airports?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAirportsSrc(data));
 
     // Fetch airports based on airline_id     <-------------- PRECISA MUDAR A API PARA SELECIONAR AEROPORTOS DE DESTINO
-    fetch(`${APP_URL}/api/airports?airline=${airline_id}`)
+    fetch(`/api/airports?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAirportsDst(data));
 
     // Fetch aircrafts based on airline_id and route=none
-    fetch(`${APP_URL}/api/aircrafts?airline=${airline_id}`)
+    fetch(`/api/aircrafts?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAircrafts(data));
 
