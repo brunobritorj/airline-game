@@ -34,7 +34,6 @@ export default async function apiAirportById(req, res) {
             iata: 1,
             airport: 1,
             city: 1,
-            state: 1,
             country: 1,
             lat: 1,
             lon: 1,
@@ -87,7 +86,7 @@ export default async function apiAirportById(req, res) {
           // Post new msg on feed (doesn't care about the result)
           const newMsg = {
             title: "Novo hub licenciado",
-            text: `${updatedUser.value.airline} adquiriu exclusividade de uso do ${updatedAirport.value.iata} | ${updatedAirport.value.airport} (${updatedAirport.value.state} - ${updatedAirport.value.country}) como seu hub, por ${moneyFormat(price)}`,
+            text: `${updatedUser.value.airline} adquiriu exclusividade de uso do ${updatedAirport.value.iata} | ${updatedAirport.value.airport} (${updatedAirport.value.city} - ${updatedAirport.value.country}) como seu hub, por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
           

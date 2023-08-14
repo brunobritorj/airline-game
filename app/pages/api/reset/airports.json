@@ -3,7 +3,6 @@
     "iata": "ORD",
     "airport": "Chicago O'Hare International",
     "city": "Chicago",
-    "state": "IL",
     "country": "USA",
     "lat": 41.979595,
     "lon": -87.904464,
@@ -14,7 +13,6 @@
     "iata": "DFW",
     "airport": "Dallas-Fort Worth International",
     "city": "Dallas-Fort Worth",
-    "state": "TX",
     "country": "USA",
     "lat": 32.89595056,
     "lon": -97.0372,
@@ -25,11 +23,50 @@
     "iata": "JFK",
     "airport": "John F Kennedy Intl",
     "city": "New York",
-    "state": "NY",
     "country": "USA",
     "lat": 40.63975111,
     "lon": -73.77892556,
     "price": 300000000,
+    "airline": null
+  },
+  {
+    "iata": "ATL",
+    "name": "Hartsfield Jackson Atlanta Intl",
+    "city": "Atlanta",
+    "country": "USA",
+    "lat": 33.636719,
+    "lon": -84.428067,
+    "price": 250000000,
+    "airline": null
+  },
+  {
+    "iata": "PEK",
+    "name": "Capital Intl",
+    "city": "Beijing",
+    "country": "China",
+    "lat": 40.080111,
+    "lon": 116.584556,
+    "price": 200000000,
+    "airline": null
+  },
+  {
+    "iata": "LHR",
+    "name": "Heathrow",
+    "city": "London",
+    "country": "United Kingdom",
+    "lat": 51.4775,
+    "lon": -0.461389,
+    "price": 250000000,
+    "airline": null
+  },
+  {
+    "city": "Paris",
+    "name": "Charles De Gaulle",
+    "country": "France",
+    "iata": "CDG",
+    "lat": 49.012779,
+    "lon": 2.55,
+    "price": 250000000,
     "airline": null
   }
 ]

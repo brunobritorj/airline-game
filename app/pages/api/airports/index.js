@@ -46,7 +46,6 @@ export default async function apiAirports(req, res) {
             iata: 1,
             airport: 1,
             city: 1,
-            state: 1,
             country: 1,
             lat: 1,
             lon: 1,

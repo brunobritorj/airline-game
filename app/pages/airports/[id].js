@@ -56,7 +56,7 @@ export default function AirportDetails({ airport }) {
   };
 
   return (
-    <BaseLayout subtitle={`${airport.iata} | ${airport.airport}`} navbarSubItems={navbarSubItems} icon="/images/airports-color-icon.svg" color={airport.color} description={`${airport.city}, ${airport.state} - ${airport.country}`}>
+    <BaseLayout subtitle={`${airport.iata} | ${airport.airport}`} navbarSubItems={navbarSubItems} icon="/images/airports-color-icon.svg" color={airport.color} description={`${airport.city} - ${airport.country}`}>
       {airport ? (
         <form onSubmit={handleSubmit}>
           {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}

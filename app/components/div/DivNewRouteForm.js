@@ -15,17 +15,21 @@ export default function NewRouteForm({airline_id}){
       .then(response => response.json())
       .then(data => setAirportsSrc(data));
 
-    // Fetch airports based on airline_id     <-------------- PRECISA MUDAR A API PARA SELECIONAR AEROPORTOS DE DESTINO
-    fetch(`/api/airports?airline=${airline_id}`)
+    // Fetch all airports
+    fetch(`/api/airports`)
       .then(response => response.json())
       .then(data => setAirportsDst(data));
 
-    // Fetch aircrafts based on airline_id and route=none
-    fetch(`/api/aircrafts?airline=${airline_id}`)
-      .then(response => response.json())
-      .then(data => setAircrafts(data));
+  }, []);
 
-    }, []);
+  useEffect(() => {
+    if (selectedAirportSrc && selectedAirportDst){
+      // Fetch aircrafts based on airline_id and route=none
+      fetch(`/api/aircrafts?airline=${airline_id}&availablefor=${selectedAirportSrc}-${selectedAirportDst}`) // Need to create / implement this API (api exists, need to support the filter)
+        .then(response => response.json())
+        .then(data => setAircrafts(data));
+    }
+  }, [selectedAirportSrc, selectedAirportDst]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +58,8 @@ export default function NewRouteForm({airline_id}){
     <form onSubmit={handleSubmit}>
       { airportsSrc &&
         <div className="mb-3">
-          <label htmlFor="airportHub" className="form-label">Hub:</label><br />
-          <select id="airportHub" className='form-select' value={selectedAirportSrc} onChange={(e) => setSelectedAirportSrc(e.target.value)}>
+          <label htmlFor="airportSrc" className="form-label">Hub:</label><br />
+          <select id="airportSrc" className='form-select' value={selectedAirportSrc} onChange={(e) => setSelectedAirportSrc(e.target.value)}>
             <option disabled selected value>Selecione seu aeroporto de origem</option>
             {airportsSrc.map((airport) => (
               <option key={airport._id} value={airport._id}>
