@@ -25,7 +25,7 @@ export default function NewRouteForm({airline_id}){
   useEffect(() => {
     if (selectedAirportSrc && selectedAirportDst){
       // Fetch aircrafts based on airline_id and route=none
-      fetch(`/api/aircrafts?airline=${airline_id}&availablefor=${selectedAirportSrc}-${selectedAirportDst}`) // Need to create / implement this API (api exists, need to support the filter)
+      fetch(`/api/aircrafts?airline=${airline_id}&available=true`) // Need to create / implement this API (api exists, need to support the filter)
         .then(response => response.json())
         .then(data => setAircrafts(data));
     }

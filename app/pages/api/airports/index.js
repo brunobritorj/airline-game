@@ -24,6 +24,7 @@ export default async function apiAirports(req, res) {
         }
       }
 
+
       // Build the pipeline to pull/convert relationships
       const queryPipeline = [
         {
