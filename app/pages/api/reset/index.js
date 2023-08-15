@@ -1,33 +1,33 @@
 import database from '../../../utils/dbConnection';
+import generateAircrafts from '../../../utils/generateResources';
 
-// -> /api/users
+// -> /api/reset
 export default async function apiGame(req, res) {
   try {
     if (req.method === 'GET') {
 
-      const baseFolder = 'pages/api/reset'
+      //const baseFolder = 'pages/api/reset'
 
       // Connect to the database
-      await database.connect();
+      //await database.connect();
 
       // Drop Collections
-      try { await database.db.collection('users').drop(); } catch (err) { console.error(`Error dropping collection users:`, err); }
-      try { await database.db.collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
+      try { let dropUsers = await database.db.collection('users').drop(); } catch (err) { console.error(`Error dropping collection users:`, err); }
+      try { let dropFeed = await database.db.collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
+      try { let dropAircrafts = await database.db.collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
 
-      // Push initial data
-      const fs = require('fs');
-      
-      // -> Airports
+      // Create aircrafts
+      const aircrafts = generateAircrafts(10);
+      await database.db.collection('aircrafts').insertMany(aircrafts);
+
+      //// Create Airports
       //try { await database.db.collection('airports').drop(); } catch (err) { console.error(`Error dropping collection airports:`, err); }
-      //const airports = JSON.parse(fs.readFileSync(`${baseFolder}/airports.json`, 'utf8'));    // Push new data
-      //await database.db.collection('airports').insertMany(airports);                          // Push new data
+      //const fs = require('fs');
+      //const airports = JSON.parse(fs.readFileSync(`${baseFolder}/airports.json`, 'utf8'));
+      //await database.db.collection('airports').insertMany(airports);
+      
+      // Just reset airports owner (airline)
       await database.db.collection('airports').updateMany({}, { $set: { airline: null } })      // Just reset owner (airline)
-
-      // -> Aircrafts
-      //try { await database.db.collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
-      //const aircrafts = JSON.parse(fs.readFileSync(`${baseFolder}/aircrafts.json`, 'utf8'));  // Push new data
-      //await database.db.collection('aircrafts').insertMany(aircrafts);                        // Push new data
-      await database.db.collection('aircrafts').updateMany({}, { $set: { airline: null } })     // Just reset owner (airline)
       
       // -> Feed
       const feed = [
@@ -39,9 +39,9 @@ export default async function apiGame(req, res) {
       ]
       
       await database.db().collection('feed').insertMany(feed);
-
+      
       // Return JSON response
-      res.status(200).json({ erased: 'ok' });
+      res.status(200).json({ newGame: 'ok' });
     } else {
       res.status(405).json({ error: 'Method not allowed' });
     }

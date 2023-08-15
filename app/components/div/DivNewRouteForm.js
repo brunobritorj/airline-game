@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import DivAlert from '../../components/div/DivAlert'
 
 export default function NewRouteForm({airline_id}){
   const [airportsSrc, setAirportsSrc] = useState();
@@ -7,6 +8,7 @@ export default function NewRouteForm({airline_id}){
   const [selectedAirportSrc, setSelectedAirportSrc] = useState();
   const [selectedAirportDst, setSelectedAirportDst] = useState();
   const [selectedAircraft, setSelectedAircraft] = useState();
+  const [routeAuthorizationStatus, setRouteAuthorizationStatus] = useState();
 
   useEffect(() => {
 
@@ -37,9 +39,10 @@ export default function NewRouteForm({airline_id}){
     const response = await fetch('/api/routes/newrequest', {
       method: 'POST',
       body: JSON.stringify({
-        airportHub: selectedAirportHub,
+        airline: airline_id,
+        src: selectedAirportSrc,
+        dst: selectedAirportDst,
         aircraft: selectedAircraft,
-        airportDestination: airportDestination,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -48,18 +51,21 @@ export default function NewRouteForm({airline_id}){
 
     if (response.status === 201) {
       const { route_id } = await response.json();
+      setRouteAuthorizationStatus("success");
       window.location.href = `/routes/${route_id}`;
     } else {
-      alert('Form submission failed. Please try again.');
+      setRouteAuthorizationStatus("warning");
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {routeAuthorizationStatus === "warning" && ( <DivAlert kind={"warning"} title={"Negado!"} message={"Impossivel criar a rota"} /> )}
+      {routeAuthorizationStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Nova rota criada"} /> )}
       { airportsSrc &&
         <div className="mb-3">
-          <label htmlFor="airportSrc" className="form-label">Hub:</label><br />
-          <select id="airportSrc" className='form-select' value={selectedAirportSrc} onChange={(e) => setSelectedAirportSrc(e.target.value)}>
+          <label htmlFor="src" className="form-label">Hub:</label><br />
+          <select id="src" className='form-select' value={selectedAirportSrc} onChange={(e) => setSelectedAirportSrc(e.target.value)}>
             <option disabled selected value>Selecione seu aeroporto de origem</option>
             {airportsSrc.map((airport) => (
               <option key={airport._id} value={airport._id}>
@@ -71,8 +77,8 @@ export default function NewRouteForm({airline_id}){
       }
       {selectedAirportSrc && airportsDst &&
         <div className="mb-3">
-          <label htmlFor="airportDst" className="form-label">Destino:</label><br />
-          <select id="airportDst" className='form-select' value={selectedAirportDst} onChange={(e) => setSelectedAirportDst(e.target.value)}>
+          <label htmlFor="dst" className="form-label">Destino:</label><br />
+          <select id="dst" className='form-select' value={selectedAirportDst} onChange={(e) => setSelectedAirportDst(e.target.value)}>
             <option disabled selected value>Selecione seu aeroporto de destino</option>
             {airportsDst.map((airport) => (
               <option key={airport._id} value={airport._id}>
@@ -89,7 +95,7 @@ export default function NewRouteForm({airline_id}){
             <option disabled selected value>Selecione a aeronave para o voo</option>
             {aircrafts.map((aircraft) => (
               <option key={aircraft._id} value={aircraft._id}>
-                {`${aircraft._id} (${aircraft.model})`}
+                {aircraft.registration}
               </option>
             ))}
           </select>

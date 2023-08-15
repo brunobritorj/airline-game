@@ -56,15 +56,19 @@ export default function AircraftDetails({ aircraft }) {
   };
 
   return (
-    <BaseLayout subtitle={`Aeronave ${aircraft._id}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={aircraft.color} description={"Detalhes"}>
+    <BaseLayout subtitle={`Aeronave ${aircraft.registration}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={aircraft.color} description={"Detalhes"}>
       {aircraft ? (
         <form onSubmit={handleSubmit}>
           {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}
           {purchaseStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Compra realizada"} /> )}
           <div className="mb-3">
             <fieldset disabled>
-              <label htmlFor="model" className="form-label">Modelo:</label><br />
-              <input className="form-control" type="text" id="model" name="model" value={aircraft.model} readOnly/><br />
+              <label htmlFor="range" className="form-label">Range (KM):</label><br />
+              <input className="form-control" type="text" id="range" name="range" value={aircraft.range} readOnly/><br />
+            </fieldset>
+            <fieldset disabled>
+              <label htmlFor="passengers" className="form-label">Passageiros:</label><br />
+              <input className="form-control" type="text" id="passengers" name="passengers" value={aircraft.passengers} readOnly/><br />
             </fieldset>
             <fieldset disabled>
               <label htmlFor="price" className="form-label">Preço:</label><br />

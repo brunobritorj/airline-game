@@ -43,7 +43,7 @@ export default async function apiAircrafts(req, res) {
         {
           $project: {
             _id: 1,
-            model: 1,
+            registration: 1,
             price: 1,
             airline: { $ifNull: ["$airlineInfo.airline", null] },
             color: { $ifNull: ["$airlineInfo.color", "#212529"] },
