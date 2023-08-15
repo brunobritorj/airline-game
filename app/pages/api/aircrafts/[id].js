@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import database from '../../../utils/dbConnection';
-import moneyFormat from '../../../utils/moneyFormat'
+import moneyFormat from '../../../utils/moneyFormat';
 
 export default async function apiAircraftById(req, res) {
 
@@ -85,7 +85,7 @@ export default async function apiAircraftById(req, res) {
           // Post new msg on feed (doesn't care about the result)
           const newMsg = {
             title: "Nova aeronave adquirida",
-            text: `${updatedUser.value.airline} adquiriu a aeronave ${model} por ${moneyFormat(price)}`,
+            text: `${updatedUser.value.airline} adquiriu a aeronave ${updatedAircraft.value.registration} por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
           

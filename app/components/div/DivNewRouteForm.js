@@ -36,7 +36,7 @@ export default function NewRouteForm({airline_id}){
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('/api/routes/newrequest', {
+    const response = await fetch('/api/routes', {
       method: 'POST',
       body: JSON.stringify({
         airline: airline_id,
@@ -52,7 +52,8 @@ export default function NewRouteForm({airline_id}){
     if (response.status === 201) {
       const { route_id } = await response.json();
       setRouteAuthorizationStatus("success");
-      window.location.href = `/routes/${route_id}`;
+      //window.location.href = `/routes/${route_id}`; <-- Need to create this page yet
+      window.location.href = `/feed`;
     } else {
       setRouteAuthorizationStatus("warning");
     }

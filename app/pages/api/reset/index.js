@@ -6,27 +6,28 @@ export default async function apiGame(req, res) {
   try {
     if (req.method === 'GET') {
 
-      //const baseFolder = 'pages/api/reset'
+      const baseFolder = 'pages/api/reset'
 
       // Connect to the database
-      //await database.connect();
+      await database.connect();
 
       // Drop Collections
       try { let dropUsers = await database.db.collection('users').drop(); } catch (err) { console.error(`Error dropping collection users:`, err); }
       try { let dropFeed = await database.db.collection('feed').drop(); } catch (err) { console.error(`Error dropping collection feed:`, err); }
       try { let dropAircrafts = await database.db.collection('aircrafts').drop(); } catch (err) { console.error(`Error dropping collection aircrafts:`, err); }
+      try { let dropRoutes = await database.db.collection('routes').drop(); } catch (err) { console.error(`Error dropping collection routes:`, err); }
 
       // Create aircrafts
       const aircrafts = generateAircrafts(10);
       await database.db.collection('aircrafts').insertMany(aircrafts);
 
-      //// Create Airports
+      //// Create Airports form file
       //try { await database.db.collection('airports').drop(); } catch (err) { console.error(`Error dropping collection airports:`, err); }
       //const fs = require('fs');
       //const airports = JSON.parse(fs.readFileSync(`${baseFolder}/airports.json`, 'utf8'));
       //await database.db.collection('airports').insertMany(airports);
       
-      // Just reset airports owner (airline)
+      // Reset Airports owner (airline)
       await database.db.collection('airports').updateMany({}, { $set: { airline: null } })      // Just reset owner (airline)
       
       // -> Feed

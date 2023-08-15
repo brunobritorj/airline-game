@@ -31,7 +31,7 @@
   },
   {
     "iata": "ATL",
-    "name": "Hartsfield Jackson Atlanta Intl",
+    "airport": "Hartsfield Jackson Atlanta Intl",
     "city": "Atlanta",
     "country": "USA",
     "lat": 33.636719,
@@ -41,7 +41,7 @@
   },
   {
     "iata": "PEK",
-    "name": "Capital Intl",
+    "airport": "Capital Intl",
     "city": "Beijing",
     "country": "China",
     "lat": 40.080111,
@@ -51,7 +51,7 @@
   },
   {
     "iata": "LHR",
-    "name": "Heathrow",
+    "airport": "Heathrow",
     "city": "London",
     "country": "United Kingdom",
     "lat": 51.4775,
@@ -61,7 +61,7 @@
   },
   {
     "city": "Paris",
-    "name": "Charles De Gaulle",
+    "airport": "Charles De Gaulle",
     "country": "France",
     "iata": "CDG",
     "lat": 49.012779,

@@ -6,7 +6,7 @@ import DivListItems from '../../components/div/DivListItems';
 
 const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
-  { name: 'Minha frota', url: '/routes?filter=mine' },
+  { name: 'Minhas rotas', url: '/routes?filter=mine' },
   { name: 'Concorrentes', url: '/routes?filter=rivals' },
   { name: 'Nova rota!', url: '/routes/new' },
 ];
@@ -32,25 +32,23 @@ export default function PageRoutes() {
     items: [
       {
         color: "blue",
-        name: "Aircraft A",
-        text: "$100",
+        name: "GIG-CDG",
+        text: "+$1M /mes",
         link: {
-          name: "Buy",
-          url: "/post/1"
+          name: "Ver",
+          url: "/id"
         }
       },
       {
         color: "red",
-        name: "Aircraft B",
-        text: "$300",
+        name: "GIG-GRU",
+        text: "+$500K /mes",
         link: {
-          name: "Sell",
-          url: "/post/2"
+          name: "Ver",
+          url: "/id"
         }
       }
     ],
-    bottomText: "All",
-    bottonLink: "/"
   }
 
   return (

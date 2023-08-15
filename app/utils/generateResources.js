@@ -7,6 +7,7 @@ export default function generateAircrafts(number, priceModifier = null) {
 
   // Set the available models
   const availableModels = [
+    { pn: "J", range: 1000, passengers: 50, basePrice: 25000000 },
     { pn: "P", range: 3000, passengers: 100, basePrice: 50000000 },
     { pn: "M", range: 6000, passengers: 150, basePrice: 100000000 },
     { pn: "G", range: 9000, passengers: 200, basePrice: 150000000 },
@@ -30,7 +31,6 @@ export default function generateAircrafts(number, priceModifier = null) {
     if (priceModifier === null) {
       let randomNumber = availablePriceModifiers[Math.floor(Math.random() * availablePriceModifiers.length)]
       price = model.basePrice * randomNumber / 100;
-      console.log(randomNumber);
     } else {
       price = model.basePrice * priceModifier / 100;
     }
