@@ -94,18 +94,18 @@ export default async function apiAircraftById(req, res) {
             text: `${updatedUser.value.airline} adquiriu a aeronave ${updatedAircraft.value.registration} por ${moneyFormat(price)}`,
             airline: updatedUser.value._id
           };
-          
           await database.db.collection('feed').insertOne(newMsg);
+
           res.status(200).json(updatedAircraft.value);
           return;
 
         } else {
-          res.status(400).json({error: 'Unable to transfer ownership'});
+          res.status(400).json({error: 'Não foi possivel transferir aeronave'});
           return;
         }
 
       } else {
-        res.status(400).json({error: 'Not enought money'});
+        res.status(400).json({error: 'Saldo insuficiente'});
         return;
       }
     }
@@ -117,6 +117,13 @@ export default async function apiAircraftById(req, res) {
       const { userId } = req.body;
       if (!userId) {
         res.status(400).json({ error: 'Missing userId in request body' });
+        return;
+      }
+
+      // Check if aircraft is available
+      const aircraftRoutes = await database.db.collection('routes').find({ aircraft: new ObjectId(aircraftId) }).toArray();
+      if (aircraftRoutes.length > 0) {
+        res.status(400).json({ error: 'Aeronave está alocada em uma rota' });
         return;
       }
 
@@ -140,12 +147,20 @@ export default async function apiAircraftById(req, res) {
           { $inc: { 'assets.cash': + updatedAircraft.value.price } }, // Payment (+)
           { returnOriginal: false } // Return the updated document
         );
-      
+
+        // Post new msg on feed (doesn't care about the result)
+        const newMsg = {
+          title: "Aeronave vendida",
+          text: `${updatedUser.value.airline} vendeu a aeronave ${updatedAircraft.value.registration} por ${moneyFormat(updatedAircraft.value.price)}`,
+          airline: updatedUser.value._id
+        };
+        await database.db.collection('feed').insertOne(newMsg);
+
         res.status(200).json({ message: 'Sold' });
         return;
 
       } else {
-        res.status(404).json({ error: 'Not found' });
+        res.status(404).json({ error: 'Aeronave nao encontrada' });
         return;
       }
 

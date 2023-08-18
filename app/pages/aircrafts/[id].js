@@ -17,7 +17,7 @@ const navbarSubItems = [
 export default function AircraftDetails({ aircraft }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [purchaseStatus, setPurchaseStatus] = useState(null);
+  const [alertStatus, setAlertStatus] = useState(null);
   if (!session) { return <LayoutUnauthenticated />; }
 
   // Reading all user data from sessionStorage
@@ -34,33 +34,72 @@ export default function AircraftDetails({ aircraft }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    const data = {
-      userId: userData._id,
-      model: aircraft.model,
-      price: aircraft.price
-    };
-    const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Indicate JSON content
-      },
-      body: JSON.stringify(data),
-    });
+    if (aircraft.airline === null) {
+      const data = {
+        userId: userData._id,
+        price: aircraft.price
+      };
+      const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Indicate JSON content
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (response.ok) {
-      setPurchaseStatus("success");
-      router.replace(router.asPath);
-    } else {
-      setPurchaseStatus("warning");
+      if (response.ok) {
+        setAlertStatus({
+          kind: "success",
+          title: "Successo!",
+          msg: "Compra realizada"
+        });
+        router.replace(router.asPath);
+      } else {
+        const errorData = await response.json();
+        setAlertStatus({
+          kind: "danger",
+          title: "Erro!",
+          msg: errorData.error
+        });
+        router.replace(router.asPath);
+      }
     }
-  };
+    else {
+      const data = {
+        userId: userData._id,
+      };
+      const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json', // Indicate JSON content
+        },
+        body: JSON.stringify(data),
+      });
 
+      if (response.ok) {
+        setAlertStatus({
+          kind: "success",
+          title: "Successo!",
+          msg: "Venda realizada"
+        });
+        router.replace(router.asPath);
+      } else {
+        const errorData = await response.json();
+        setAlertStatus({
+          kind: "danger",
+          title: "Erro!",
+          msg: errorData.error
+        });
+        router.replace(router.asPath);
+      }
+    }
+
+  };
   return (
     <BaseLayout subtitle={`Aeronave ${aircraft.registration}`} navbarSubItems={navbarSubItems} icon="/images/aircrafts-color-icon.svg" color={aircraft.color} description={"Detalhes"}>
       {aircraft ? (
         <form onSubmit={handleSubmit}>
-          {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}
-          {purchaseStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Compra realizada"} /> )}
+          {alertStatus && (<DivAlert kind={alertStatus.kind} title={alertStatus.title} message={alertStatus.msg} />)}
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="range" className="form-label">Range (KM):</label><br />
@@ -74,14 +113,13 @@ export default function AircraftDetails({ aircraft }) {
               <label htmlFor="price" className="form-label">Preço:</label><br />
               <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)} readOnly/><br />
             </fieldset>
-            { aircraft.airline === null ? (
-              <>
-                <input type="hidden" id="userId" name="userId" value={userData._id} />
-                <div className="d-grid gap-2">
-                  <button type="submit" className="btn btn-secondary">Comprar</button>
-                </div>
-              </>
-            ) : ("") }
+            <div className="d-grid gap-2">
+              { aircraft.airline === null ? (
+                <button type="submit" className="btn btn-secondary">Comprar</button>
+              ) : (
+                <button type="submit" className="btn btn-danger">Vender</button>
+              ) }
+            </div>
           </div>
         </form>
       ) : (
