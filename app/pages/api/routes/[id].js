@@ -72,6 +72,16 @@ export default async function apiAircraftById(req, res) {
       // Return the data as JSON response
       res.status(200).json(routeResult[0]);
   
+    } else if (req.method === 'DELETE') {
+      let query = { _id: new ObjectId(routeId) }
+      const result = await database.db.collection('routes').deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.status(200).json({ error: 'Deleted' });
+        return;
+      } else {
+        console.log(result);
+        res.status(404).json({ error: 'Not found' });
+      }
     } else {
       res.status(405).json({ error: 'Method not allowed' });
       return;

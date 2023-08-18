@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
+import DivAlert from '../../components/div/DivAlert'
 import moneyFormat from '../../utils/moneyFormat'
 import distanceFormat from '../../utils/distanceFormat'
 
@@ -17,6 +18,7 @@ const navbarSubItems = [
 export default function AircraftDetails({ route }) {
   const { data: session } = useSession();
   const router = useRouter();
+  const [sellStatus, setSellStatus] = useState(null);
 
   // Reading all user data from sessionStorage
   if (!session) { return <LayoutUnauthenticated />; }
@@ -29,11 +31,31 @@ export default function AircraftDetails({ route }) {
     router.push('/');
     return;
   }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
   
+    const response = await fetch(`/api/routes/${route._id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (response.ok) {
+      setSellStatus("success");
+      setTimeout(() => { router.back(); }, 2000); // This navigates the user to the previous page, waiting 1 second
+    } else {
+      setSellStatus("warning");
+    }
+  };
+
   return (
     <BaseLayout subtitle={`${route.src}-${route.dst}`} navbarSubItems={navbarSubItems} icon="/images/routes-color-icon.svg" color={route.color} description={"Rota"}>
       {route ? (
-        <form>
+        <form onSubmit={handleSubmit}>
+          {sellStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Encerramento invalido"} /> )}
+          {sellStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Encerramento realizado"} /> )}
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="aircraft" className="form-label">Aeronave:</label><br />
@@ -51,6 +73,9 @@ export default function AircraftDetails({ route }) {
               <label htmlFor="airport" className="form-label">Fluxo mensal:</label><br />
               <input className="form-control" type="text" id="airport" name="airport" value={moneyFormat(route.profitMontly)} readOnly/>
             </fieldset>
+          </div>
+          <div className="d-grid gap-2">
+            <button type="submit" className="btn btn-danger">Encerrar rota</button>
           </div>
         </form>
       ) : (

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import DivAlert from '../../components/div/DivAlert'
 
 export default function NewRouteForm({airline_id}){
+  const router = useRouter();
   const [airportsSrc, setAirportsSrc] = useState();
   const [airportsDst, setAirportsDst] = useState();
   const [aircrafts, setAircrafts] = useState();
@@ -11,12 +13,10 @@ export default function NewRouteForm({airline_id}){
   const [routeAuthorizationStatus, setRouteAuthorizationStatus] = useState();
 
   useEffect(() => {
-
     // Fetch airports based on airline_id
     fetch(`/api/airports?airline=${airline_id}`)
       .then(response => response.json())
       .then(data => setAirportsSrc(data));
-
     // Fetch all airports
     fetch(`/api/airports`)
       .then(response => response.json())
@@ -35,7 +35,6 @@ export default function NewRouteForm({airline_id}){
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const response = await fetch('/api/routes', {
       method: 'POST',
       body: JSON.stringify({
@@ -52,8 +51,7 @@ export default function NewRouteForm({airline_id}){
     if (response.status === 201) {
       const { route_id } = await response.json();
       setRouteAuthorizationStatus("success");
-      //window.location.href = `/routes/${route_id}`; <-- Need to create this page yet
-      window.location.href = `/routes`;
+      setTimeout(() => { router.back(); }, 2000); // This navigates the user to the previous page, waiting 1 second
     } else {
       setRouteAuthorizationStatus("warning");
     }
