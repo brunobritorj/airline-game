@@ -51,7 +51,7 @@ export default function AirportDetails({ airport }) {
       setAlertStatus({
         kind: "success",
         title: "Negócio fechado!",
-        msg: "Voce possui licença para operar no aerporto"
+        msg: "Você possui licença para operar no aerporto"
       });
     } else {
       const errorData = await response.json();
@@ -92,10 +92,8 @@ export default function AirportDetails({ airport }) {
 }
 
 export async function getServerSideProps(context) {
-  // Fetch airport data using the id from a service or API
   const response = await fetch(`${APP_URL}/api/airports/${context.query.id}`);
   const airport = await response.json();
-
   return {
     props: {
       airport,
