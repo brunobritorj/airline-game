@@ -37,7 +37,7 @@ export default function PageAircrafts() {
       if (filter === 'mine') { url = `/api/aircrafts?airline=${userData._id}`}
       else if (filter === 'rivals') { url = `/api/aircrafts?airline=!${userData._id}`}
       else if (filter === 'sale') { url = `/api/aircrafts?airline=none`}
-      fetch(url) // Replace with your actual API endpoint
+      fetch(url)
         .then(response => response.json())
         .then(data => {
           setAircraftsData(data);
@@ -46,7 +46,7 @@ export default function PageAircrafts() {
           console.error('An error occurred while fetching data:', error);
         });
     }
-  }, [filter]); // Run this effect only once, when the component mounts
+  }, [filter]);
 
   if (!session) {
     return <LayoutUnauthenticated />;

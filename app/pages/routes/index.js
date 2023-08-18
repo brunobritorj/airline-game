@@ -1,8 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
-import DivListItems from '../../components/div/DivListItems';
+import DivListRoutes from '../../components/div/DivListRoutes';
 
 const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
@@ -14,46 +15,46 @@ const navbarSubItems = [
 export default function PageRoutes() {
   const { data: session } = useSession();
   const router = useRouter();
-  if (!session) { return <LayoutUnauthenticated />; }
 
-  // Reading all user data from sessionStorage
-  const properties = ['_id', 'name', 'email', 'airline', 'color'];
-  const userData = {};
-  properties.forEach(property => {
-    userData[property] = sessionStorage.getItem(property);
-  });
-  if (!userData._id) {
-    router.push('/');
-    return;
-  }
-  
-  const genericItems = {
-    title: "Recent updates",
-    items: [
-      {
-        color: "blue",
-        name: "GIG-CDG",
-        text: "+$1M /mes",
-        link: {
-          name: "Ver",
-          url: "/id"
-        }
-      },
-      {
-        color: "red",
-        name: "GIG-GRU",
-        text: "+$500K /mes",
-        link: {
-          name: "Ver",
-          url: "/id"
-        }
-      }
-    ],
+  // Accessing query parameters
+  const { filter } = router.query;
+
+  // State variable for routes
+  const [routesData, setRoutesData] = useState(null);
+
+  useEffect(() => {
+    // Reading all user data from sessionStorage
+    const properties = ['_id', 'name', 'email', 'airline', 'color'];
+    const userData = {};
+    properties.forEach(property => {
+      userData[property] = sessionStorage.getItem(property);
+    });
+    if (!userData._id) {
+      router.push('/');
+      return;
+    } else {
+      // Fetch aircrafts from an API endpoint
+      let url = '/api/routes'
+      if (filter === 'mine') { url = `/api/routes?airline=${userData._id}`}
+      else if (filter === 'rivals') { url = `/api/routes?airline=!${userData._id}`}
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          setRoutesData(data);
+        })
+        .catch(error => {
+          console.error('An error occurred while fetching data:', error);
+        });
+    }
+  }, [filter]);
+
+  if (!session) {
+    return <LayoutUnauthenticated />;
   }
 
   return (
     <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui!" navbarSubItems={navbarSubItems}>
-      {genericItems && <DivListItems genericItems={genericItems}/>} {/* Render only when genericItems is available */}
+      {routesData && <DivListRoutes routes={routesData}/>} {/* Render only when routesData is available */}
     </BaseLayout>
   );
 

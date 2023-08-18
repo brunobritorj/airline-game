@@ -11,8 +11,84 @@ export default async function apiNewRoute(req, res) {
 
     // -> GET /api/routes
     if (req.method === 'GET') {
-      res.status(405).json({ error: 'Method not allowed' });
-      return;
+
+      // Build the query based on user inputs
+      let query = {};
+      const { airline } = req.query;
+      if (airline) {
+        if (airline === 'none') {
+          query.airline = null;
+        } else if (airline.startsWith('!')) {
+          const airlineValue = new ObjectId(airline.substring(1));
+          query.airline = { $not: { $in: [null, airlineValue] }};
+        } else {
+          query.airline = new ObjectId(airline);
+        }
+      }
+
+      // Build the pipeline to pull/convert relationships
+      const queryPipeline = [
+        {
+          $match: query,
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "airline",
+            foreignField: "_id",
+            as: "airlineInfo"
+          }
+        },
+        {
+          $lookup: {
+            from: "airports",
+            localField: "src",
+            foreignField: "_id",
+            as: "srcInfo"
+          }
+        },
+        {
+          $lookup: {
+            from: "airports",
+            localField: "dst",
+            foreignField: "_id",
+            as: "dstInfo"
+          }
+        },
+        {
+          $lookup: {
+            from: "aircrafts",
+            localField: "aircraft",
+            foreignField: "_id",
+            as: "aircraftInfo"
+          }
+        },
+        {
+          $unwind: { path: "$airlineInfo", preserveNullAndEmptyArrays: true },
+        },
+        {
+          $project: {
+            _id: 1,
+            airline: "$airlineInfo.airline",
+            color: "$airlineInfo.color",
+            src: { $arrayElemAt: ["$srcInfo.iata", 0] },
+            dst: { $arrayElemAt: ["$dstInfo.iata", 0] },
+            aircraft: { $arrayElemAt: ["$aircraftInfo.registration", 0] },
+            distance: 1,
+            profitMontly: 1
+          }
+        },
+        {
+          $limit: 100,
+        }
+      ];
+
+      // Perform the query
+      let data;
+      data = await database.db.collection('routes').aggregate(queryPipeline).sort({ _id: -1 }).toArray();
+      
+      // Return the data as JSON response
+      res.status(200).json(data);
     }
     // -> POST /api/routes/
     else if (req.method === 'POST') {
@@ -24,6 +100,19 @@ export default async function apiNewRoute(req, res) {
         return;
       }
 
+      // Check if source and destination airports are the same
+      if (src === dst) {
+        res.status(400).json({ error: 'Source and destination airports cannot be the same' });
+        return;
+      }
+
+      // Check if route already exists
+      const routes = await database.db.collection('routes').find({ src: new ObjectId(src), dst: new ObjectId(dst) }).toArray();
+      if (routes.length > 0) {
+        res.status(400).json({ error: 'Route already exists' });
+        return;
+      }
+
       // Check if aircraft is available
       const aircraftRoutes = await database.db.collection('routes').find({ aircraft: new ObjectId(aircraft) }).toArray();
       if (aircraftRoutes.length > 0) {
@@ -31,7 +120,7 @@ export default async function apiNewRoute(req, res) {
         return;
       }
 
-      // Check if aircraft owner is the airline owner
+      // Check if aircraft's owner is the airline owner
       const aircraftData = await database.db.collection('aircrafts').find({ _id: new ObjectId(aircraft) }).toArray();
       if (aircraftData[0].airline.toString() !== airline) {
         res.status(400).json({ error: 'Aircraft owner is not the current user' });

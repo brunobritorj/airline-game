@@ -1,0 +1,9 @@
+@endpoint = http://localhost:3000
+
+### GET /api/routes
+GET {{endpoint}}/api/routes HTTP/1.1
+content-type: application/json
+
+### GET /api/routes/{id}
+GET {{endpoint}}/api/routes/64df665d19960725b99474d2 HTTP/1.1
+content-type: application/json

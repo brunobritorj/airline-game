@@ -53,7 +53,7 @@ export default function NewRouteForm({airline_id}){
       const { route_id } = await response.json();
       setRouteAuthorizationStatus("success");
       //window.location.href = `/routes/${route_id}`; <-- Need to create this page yet
-      window.location.href = `/feed`;
+      window.location.href = `/routes`;
     } else {
       setRouteAuthorizationStatus("warning");
     }
