@@ -10,7 +10,7 @@ export default function NewRouteForm({airline_id}){
   const [selectedAirportSrc, setSelectedAirportSrc] = useState();
   const [selectedAirportDst, setSelectedAirportDst] = useState();
   const [selectedAircraft, setSelectedAircraft] = useState();
-  const [routeAuthorizationStatus, setRouteAuthorizationStatus] = useState();
+  const [alertStatus, setAlertStatus] = useState(null);
 
   useEffect(() => {
     // Fetch airports based on airline_id
@@ -49,18 +49,26 @@ export default function NewRouteForm({airline_id}){
     });
 
     if (response.status === 201) {
-      const { route_id } = await response.json();
-      setRouteAuthorizationStatus("success");
+      setAlertStatus({
+        kind: "success",
+        title: "Autorizado!",
+        msg: "Rota aberta com sucesso."
+      });
       setTimeout(() => { router.back(); }, 1000); // This navigates the user to the previous page, waiting 1 second
     } else {
-      setRouteAuthorizationStatus("warning");
+      const errorData = await response.json();
+      setAlertStatus({
+        kind: "danger",
+        title: "Não autorizado!",
+        msg: errorData.error
+      });
     }
+
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {routeAuthorizationStatus === "warning" && ( <DivAlert kind={"warning"} title={"Negado!"} message={"Impossivel criar a rota"} /> )}
-      {routeAuthorizationStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Nova rota criada"} /> )}
+      {alertStatus && (<DivAlert kind={alertStatus.kind} title={alertStatus.title} message={alertStatus.msg} />)}
       { airportsSrc &&
         <div className="mb-3">
           <label htmlFor="src" className="form-label">Hub:</label><br />

@@ -21,7 +21,7 @@ GET {{endpoint}}/api/aircrafts/64de5416482fbf12a863d56f HTTP/1.1
 content-type: application/json
 
 ### POST /api/aircrafts/{id}
-POST {{endpoint}}/api/aircrafts/64de5416482fbf12a863d56f HTTP/1.1
+POST {{endpoint}}/api/aircrafts/64de5416482fbf12a863d570 HTTP/1.1
 content-type: application/json
 
 {

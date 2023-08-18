@@ -33,66 +33,39 @@ export default function AircraftDetails({ aircraft }) {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    if (aircraft.airline === null) {
-      const data = {
-        userId: userData._id,
-        price: aircraft.price
-      };
-      const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // Indicate JSON content
-        },
-        body: JSON.stringify(data),
-      });
 
-      if (response.ok) {
-        setAlertStatus({
-          kind: "success",
-          title: "Successo!",
-          msg: "Compra realizada"
-        });
-        router.replace(router.asPath);
-      } else {
-        const errorData = await response.json();
-        setAlertStatus({
-          kind: "danger",
-          title: "Erro!",
-          msg: errorData.error
-        });
-        router.replace(router.asPath);
-      }
-    }
-    else {
-      const data = {
-        userId: userData._id,
-      };
-      const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json', // Indicate JSON content
-        },
-        body: JSON.stringify(data),
-      });
+    const data = {
+      userId: userData._id,
+      price: aircraft.price
+    };
 
-      if (response.ok) {
-        setAlertStatus({
-          kind: "success",
-          title: "Successo!",
-          msg: "Venda realizada"
-        });
-        router.replace(router.asPath);
-      } else {
-        const errorData = await response.json();
-        setAlertStatus({
-          kind: "danger",
-          title: "Erro!",
-          msg: errorData.error
-        });
-        router.replace(router.asPath);
-      }
+    let method;
+    if (aircraft.airline === null) { method = 'POST'; }
+    else { method = 'DELETE'; }
+    
+    const response = await fetch(`/api/aircrafts/${aircraft._id}`, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json', // Indicate JSON content
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      setAlertStatus({
+        kind: "success",
+        title: "Successo!",
+        msg: "Operação realizada"
+      });
+    } else {
+      const errorData = await response.json();
+      setAlertStatus({
+        kind: "danger",
+        title: "Erro!",
+        msg: errorData.error
+      });
     }
+    router.replace(router.asPath);
 
   };
   return (
@@ -103,15 +76,15 @@ export default function AircraftDetails({ aircraft }) {
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="range" className="form-label">Range (KM):</label><br />
-              <input className="form-control" type="text" id="range" name="range" value={aircraft.range} readOnly/><br />
+              <input className="form-control" type="text" id="range" name="range" value={aircraft.range} /><br />
             </fieldset>
             <fieldset disabled>
               <label htmlFor="passengers" className="form-label">Passageiros:</label><br />
-              <input className="form-control" type="text" id="passengers" name="passengers" value={aircraft.passengers} readOnly/><br />
+              <input className="form-control" type="text" id="passengers" name="passengers" value={aircraft.passengers} /><br />
             </fieldset>
             <fieldset disabled>
               <label htmlFor="price" className="form-label">Preço:</label><br />
-              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)} readOnly/><br />
+              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)}/><br />
             </fieldset>
             <div className="d-grid gap-2">
               { aircraft.airline === null ? (
@@ -130,10 +103,8 @@ export default function AircraftDetails({ aircraft }) {
 }
 
 export async function getServerSideProps(context) {
-  // Fetch aircraft data using the id from a service or API
   const response = await fetch(`${APP_URL}/api/aircrafts/${context.query.id}`);
   const aircraft = await response.json();
-
   return {
     props: {
       aircraft,

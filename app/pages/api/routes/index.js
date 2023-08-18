@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import database from '../../../utils/dbConnection';
 import distanceInKm from '../../../utils/distanceMeasures';
 import moneyFormat from '../../../utils/moneyFormat';
+import distanceFormat from '../../../utils/distanceFormat';
 
 export default async function apiNewRoute(req, res) {
 
@@ -102,21 +103,21 @@ export default async function apiNewRoute(req, res) {
 
       // Check if source and destination airports are the same
       if (src === dst) {
-        res.status(400).json({ error: 'Source and destination airports cannot be the same' });
+        res.status(400).json({ error: 'Aeroportos de origem e destino não podem ser o mesmo' });
         return;
       }
 
       // Check if route already exists
       const routes = await database.db.collection('routes').find({ src: new ObjectId(src), dst: new ObjectId(dst) }).toArray();
       if (routes.length > 0) {
-        res.status(400).json({ error: 'Route already exists' });
+        res.status(400).json({ error: 'Rota ja existe' });
         return;
       }
 
       // Check if aircraft is available
       const aircraftRoutes = await database.db.collection('routes').find({ aircraft: new ObjectId(aircraft) }).toArray();
       if (aircraftRoutes.length > 0) {
-        res.status(400).json({ error: 'Aircraft is already allocated to a route' });
+        res.status(400).json({ error: 'Aeronave ja esta alocada em outra rota' });
         return;
       }
 
@@ -133,7 +134,7 @@ export default async function apiNewRoute(req, res) {
       // Determine the distance between airports and check if aircraft supports the route range
       const distance = distanceInKm( [srcAirportData[0].lat, srcAirportData[0].lon], [dstAirportData[0].lat, dstAirportData[0].lon]);
       if (distance > aircraftData[0].range){
-        res.status(400).json({ error: 'Aircraft does not support this route range' });
+        res.status(400).json({ error: `Aeronave não suporta voo de ${distanceFormat(distance)}` });
         return;
       }
 
