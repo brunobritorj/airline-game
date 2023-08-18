@@ -17,7 +17,7 @@ const navbarSubItems = [
 export default function AirportDetails({ airport }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [purchaseStatus, setPurchaseStatus] = useState(null);
+  const [alertStatus, setAlertStatus] = useState(null);
   if (!session) { return <LayoutUnauthenticated />; }
 
   // Reading all user data from sessionStorage
@@ -48,19 +48,27 @@ export default function AirportDetails({ airport }) {
     });
 
     if (response.ok) {
-      setPurchaseStatus("success");
-      router.replace(router.asPath);
+      setAlertStatus({
+        kind: "success",
+        title: "Negócio fechado!",
+        msg: "Voce possui licença para operar no aerporto"
+      });
     } else {
-      setPurchaseStatus("warning");
+      const errorData = await response.json();
+      setAlertStatus({
+        kind: "danger",
+        title: "Erro!",
+        msg: errorData.error
+      });
     }
+
   };
 
   return (
     <BaseLayout subtitle={`${airport.iata} | ${airport.airport}`} navbarSubItems={navbarSubItems} icon="/images/airports-color-icon.svg" color={airport.color} description={`${airport.city} - ${airport.country}`}>
       {airport ? (
         <form onSubmit={handleSubmit}>
-          {purchaseStatus === "warning" && ( <DivAlert kind={"warning"} title={"Erro!"} message={"Compra invalida"} /> )}
-          {purchaseStatus === "success" && ( <DivAlert kind={"success"} title={"Successo!"} message={"Compra realizada"} /> )}
+          {alertStatus && (<DivAlert kind={alertStatus.kind} title={alertStatus.title} message={alertStatus.msg} />)}
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="price" className="form-label">Preço:</label><br />

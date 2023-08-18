@@ -95,12 +95,12 @@ export default async function apiAirportById(req, res) {
           return;
 
         } else {
-          res.status(400).json({error: 'Unable to transfer ownership'});
+          res.status(400).json({error: 'Não foi possivel adquirir o hub'});
           return;
         }
 
       } else {
-        res.status(400).json({error: 'Not enought money'});
+        res.status(400).json({error: 'Saldo insuficiente'});
         return;
       }
 
