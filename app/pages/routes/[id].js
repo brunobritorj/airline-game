@@ -44,7 +44,7 @@ export default function AircraftDetails({ route }) {
 
     if (response.ok) {
       setSellStatus("success");
-      setTimeout(() => { router.back(); }, 2000); // This navigates the user to the previous page, waiting 1 second
+      setTimeout(() => { router.back(); }, 1000); // This navigates the user to the previous page, waiting 1 second
     } else {
       setSellStatus("warning");
     }

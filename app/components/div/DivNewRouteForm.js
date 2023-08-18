@@ -51,7 +51,7 @@ export default function NewRouteForm({airline_id}){
     if (response.status === 201) {
       const { route_id } = await response.json();
       setRouteAuthorizationStatus("success");
-      setTimeout(() => { router.back(); }, 2000); // This navigates the user to the previous page, waiting 1 second
+      setTimeout(() => { router.back(); }, 1000); // This navigates the user to the previous page, waiting 1 second
     } else {
       setRouteAuthorizationStatus("warning");
     }

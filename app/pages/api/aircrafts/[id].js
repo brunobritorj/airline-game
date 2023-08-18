@@ -54,7 +54,7 @@ export default async function apiAircraftById(req, res) {
     else if (req.method === 'POST') {
 
       // Get data from body
-      const { userId, model, price } = req.body;
+      const { userId, price } = req.body;
       if (!userId) {
         res.status(400).json({ error: 'Missing userId in request body' });
         return;
@@ -64,7 +64,7 @@ export default async function apiAircraftById(req, res) {
       const updatedUser = await database.db.collection('users').findOneAndUpdate(
         {
           "_id": new ObjectId(userId),
-          "assets.cash": { $gte: price } // Check if user has money
+          "assets.cash": { $gte: price } // Assures that user has money
         },
         { $inc: { 'assets.cash': - price } }, // Payment
         { returnOriginal: false } // Return the updated document
@@ -73,10 +73,16 @@ export default async function apiAircraftById(req, res) {
       // If user had enought money to pay
       if (updatedUser.value != null){
 
-        // Transfer the aircraft ownership
+        // Transfer the aircraft ownership and decrease 15% of the aircraft value
         const updatedAircraft = await database.db.collection('aircrafts').findOneAndUpdate(
-          { _id: new ObjectId(aircraftId) },
-          { $set: { airline: new ObjectId(userId) } },
+          {
+            _id: new ObjectId(aircraftId),
+            price: price // Assures that the price payed by the user is the same as the price of the aircraft
+          },
+          { $set: {
+            airline: new ObjectId(userId),
+            price: (price * 0.85),
+          } },
           { returnOriginal: false }
         );
 
@@ -102,11 +108,54 @@ export default async function apiAircraftById(req, res) {
         res.status(400).json({error: 'Not enought money'});
         return;
       }
+    }
 
-    } else {
+    // -> DELETE /aircrafts/{id}
+    else if (req.method === 'DELETE') {
+
+      // Get data from body
+      const { userId } = req.body;
+      if (!userId) {
+        res.status(400).json({ error: 'Missing userId in request body' });
+        return;
+      }
+
+      // Transfer the aircraft ownership
+      const updatedAircraft = await database.db.collection('aircrafts').findOneAndUpdate(
+        {
+          _id: new ObjectId(aircraftId),
+          airline: new ObjectId(userId) // Assures that aircraft is owned by the user
+        },
+        { $set: { airline: null } },
+        { returnOriginal: false }
+      );
+
+      if (updatedAircraft.value != null){
+
+        // Update the document increasing assets.money
+        const updatedUser = await database.db.collection('users').findOneAndUpdate(
+          {
+            _id: new ObjectId(userId),
+          },
+          { $inc: { 'assets.cash': + updatedAircraft.value.price } }, // Payment (+)
+          { returnOriginal: false } // Return the updated document
+        );
+      
+        res.status(200).json({ message: 'Sold' });
+        return;
+
+      } else {
+        res.status(404).json({ error: 'Not found' });
+        return;
+      }
+
+    }
+    
+    else {
       res.status(405).json({ error: 'Method not allowed' });
       return;
     }
+
   } catch (error) {
     console.error('API route error:', error);
     res.status(500).json({ error: 'Internal server error' });
