@@ -6,7 +6,7 @@ import DivNewRouteForm from '../../components/div/DivNewRouteForm';
 
 const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
-  { name: 'Minha frota', url: '/routes?filter=mine' },
+  { name: 'Minhas rotas', url: '/routes?filter=mine' },
   { name: 'Concorrentes', url: '/routes?filter=rivals' },
   { name: 'Nova rota!', url: '/routes/new' },
 ];

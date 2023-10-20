@@ -76,15 +76,15 @@ export default function AircraftDetails({ aircraft }) {
           <div className="mb-3">
             <fieldset disabled>
               <label htmlFor="range" className="form-label">Range (KM):</label><br />
-              <input className="form-control" type="text" id="range" name="range" value={aircraft.range} /><br />
+              <input className="form-control" type="text" id="range" name="range" value={aircraft.range} readOnly /><br />
             </fieldset>
             <fieldset disabled>
               <label htmlFor="passengers" className="form-label">Passageiros:</label><br />
-              <input className="form-control" type="text" id="passengers" name="passengers" value={aircraft.passengers} /><br />
+              <input className="form-control" type="text" id="passengers" name="passengers" value={aircraft.passengers} readOnly /><br />
             </fieldset>
             <fieldset disabled>
               <label htmlFor="price" className="form-label">Preço:</label><br />
-              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)}/><br />
+              <input className="form-control" type="text" id="price" name="price" value={moneyFormat(aircraft.price)} readOnly /><br />
             </fieldset>
             <div className="d-grid gap-2">
               { aircraft.airline === null ? (

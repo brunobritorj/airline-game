@@ -141,7 +141,7 @@ export default async function apiNewRoute(req, res) {
       const airlineData = await database.db.collection('users').findOne({ _id: new ObjectId(airline)});
 
       // Calculate the montly profit !!! NEEDS ATTENTION
-      const profitMontly = 10000000 * (distance / aircraftData[0].range);
+      const profitMontly = (srcAirportData[0].price + dstAirportData[0].price) / 50 * (distance / aircraftData[0].range);
 
       // Update the routes collection
       await database.db.collection('routes').insertOne({

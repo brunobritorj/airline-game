@@ -1,11 +1,11 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'; // Import useState and useEffect
-import LayoutUnauthenticated from '../components/LayoutUnauthenticated';
-import BaseLayout from '../components/BaseLayout';
-import DivListNews from '../components/div/DivListNews'
-import DivListAssets from '../components/div/DivListAssets';
-import moneyFormat from '../utils/moneyFormat'
+import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
+import BaseLayout from '../../components/BaseLayout';
+import DivListNews from '../../components/div/DivListNews'
+import DivListAssets from '../../components/div/DivListAssets';
+import moneyFormat from '../../utils/moneyFormat'
 
 const navbarSubItems = [
   { name: 'Todas', url: '/feed' },

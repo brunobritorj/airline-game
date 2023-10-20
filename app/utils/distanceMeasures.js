@@ -16,7 +16,7 @@ export default function distanceInKm(coord1, coord2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   
   const distance = R * c; // Distance in kilometers
-  return distance;
+  return Number(distance.toFixed(2));
 }
 
 /*

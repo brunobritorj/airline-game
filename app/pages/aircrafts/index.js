@@ -10,6 +10,7 @@ const navbarSubItems = [
   { name: 'Minha frota', url: '/aircrafts?filter=mine' },
   { name: 'Concorrentes', url: '/aircrafts?filter=rivals' },
   { name: 'Loja', url: '/aircrafts?filter=sale' },
+  { name: 'Wiki', url: '/aircrafts/wiki' }
 ];
 
 export default function PageAircrafts() {
