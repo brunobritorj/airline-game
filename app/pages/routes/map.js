@@ -3,13 +3,13 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import LayoutUnauthenticated from '../../components/LayoutUnauthenticated';
 import BaseLayout from '../../components/BaseLayout';
-import DivListRoutes from '../../components/div/DivListRoutes';
+import DivRoutesMap from '../../components/div/DivRoutesMap';
 
 const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
   { name: 'Minhas rotas', url: '/routes?filter=mine' },
   { name: 'Concorrentes', url: '/routes?filter=rivals' },
-  //{ name: 'Mapa', url: '/routes/map' },
+  { name: 'Mapa', url: '/routes/map' },
   { name: 'Nova rota', url: '/routes/new' },
 ];
 
@@ -42,6 +42,7 @@ export default function PageRoutes() {
         .then(response => response.json())
         .then(data => {
           setRoutesData(data);
+          console.log(data);
         })
         .catch(error => {
           console.error('An error occurred while fetching data:', error);
@@ -55,7 +56,7 @@ export default function PageRoutes() {
 
   return (
     <BaseLayout subtitle="Rotas" color={sessionStorage.getItem('color')} icon="/images/routes-color-icon.svg" description="Gerencie rotas aereas aqui!" navbarSubItems={navbarSubItems}>
-      {routesData && <DivListRoutes routes={routesData}/>} {/* Render only when routesData is available */}
+      {routesData && <DivRoutesMap routes={routesData}/>} {/* Render only when routesData is available */}
     </BaseLayout>
   );
 

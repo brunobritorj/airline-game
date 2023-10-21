@@ -8,7 +8,8 @@ const navbarSubItems = [
   { name: 'Todas', url: '/routes' },
   { name: 'Minhas rotas', url: '/routes?filter=mine' },
   { name: 'Concorrentes', url: '/routes?filter=rivals' },
-  { name: 'Nova rota!', url: '/routes/new' },
+  //{ name: 'Mapa', url: '/routes/map' },
+  { name: 'Nova rota', url: '/routes/new' },
 ];
 
 export default function PageRoutes() {
