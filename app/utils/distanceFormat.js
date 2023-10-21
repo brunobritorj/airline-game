@@ -1,7 +1,7 @@
 export default function distanceFormat(number) {
   if (number < 1000) {
-    return number + " m";
+    return number.toFixed(1) + " KM";
   } else {
-    return (number / 1000).toFixed(2) + " KM";
+    return number.toFixed(0) + " KM";
   }
 }
